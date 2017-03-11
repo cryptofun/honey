@@ -59,41 +59,53 @@ public:
         // Build the genesis block. Note that the output of the genesis coinbase cannot
         // be spent as it did not originally exist in the database.
         //
-        //CBlock(hash=85611084f469f7649acf972b37ceebef704487cc269b26699ab5f0ab10c9fc6e, ver=1, hashPrevBlock=0000000000000000000000000000000000000000000000000000000000000000, hashMerkleRoot=c62556ce65adf5af3d0069609d3ff87ce147c65974c47e9c27c63c0994c3a72b, nTime=1488606925, nBits=bnProofOfWorkLimit.GetCompact();, nNonce=938463, vtx=1, vchBlockSig=)
-        //  Coinbase(hash=0001, nTime=1488606925, ver=1, vin.size=1, vout.size=1, nLockTime=0)
-        //    CTxIn(COutPoint(0000000000, 4294967295), coinbase 001)
-        //    CTxOut(empty)
-        //  vMerkleTree: 0001
+        // Hashed MainNet Genesis Block Output
+        // block.hashMerkleRoot == aa86eee12eff9c70d06949ec0185bcfdc08098e59408f41ee2c3063afb9a40da
+        // block.nTime = 1489195690
+        // block.nNonce = 428182
+        // block.GetHash = 000000a70d759b452f04f26c30ab96b90d5b56e736c60e3551d1e00df1280549
         //
-        const char* pszTimestamp = "Locally-sourced Honey Could Help with Allergies";
+        const char* pszTimestamp = "Locally-sourced Honey Could Help with Allergies - 2017"; // Sat, 11 Mar 2017 01:28:10 GMT
         std::vector<CTxIn> vin;
         vin.resize(1);
         vin[0].scriptSig = CScript() << 0 << CBigNum(42) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
         std::vector<CTxOut> vout;
         vout.resize(1);
         vout[0].SetEmpty();
-        CTransaction txNew(1, 1488606925, vin, vout, 0);
+        CTransaction txNew(1, 1489195690, vin, vout, 0); // Sat, 11 Mar 2017 01:28:10 GMT
         genesis.vtx.push_back(txNew);
         genesis.hashPrevBlock = 0;
         genesis.hashMerkleRoot = genesis.BuildMerkleTree();
         genesis.nVersion = 1;
-        genesis.nTime    = 1488606925;
+        genesis.nTime    = 1489195690; // Sat, 11 Mar 2017 01:28:10 GMT
         genesis.nBits    = bnProofOfWorkLimit.GetCompact();
-        genesis.nNonce   = 938463 ;
+        genesis.nNonce   = 428182 ;
 
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x85611084f469f7649acf972b37ceebef704487cc269b26699ab5f0ab10c9fc6e"));
-        assert(genesis.hashMerkleRoot == uint256("0xc62556ce65adf5af3d0069609d3ff87ce147c65974c47e9c27c63c0994c3a72b"));
+        assert(hashGenesisBlock == uint256("0x000000a70d759b452f04f26c30ab96b90d5b56e736c60e3551d1e00df1280549"));
+        assert(genesis.hashMerkleRoot == uint256("0xaa86eee12eff9c70d06949ec0185bcfdc08098e59408f41ee2c3063afb9a40da"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
 
-
+        /** DEPRICATED IN QT 5.6+ (To compile on Qt5.5.1 and lower uncomment  */
+        /*
         base58Prefixes[PUBKEY_ADDRESS] = list_of(41);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(63);
         base58Prefixes[SECRET_KEY] =     list_of(100);
         base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x50)(0xE7)(0xFC)(0x0A);
         base58Prefixes[EXT_SECRET_KEY] = list_of(0x50)(0x9E)(0x4)(0x2F);
+        */
+        /** REQUIRED IN QT 5.6+  (To compile on Qt5.5.1 and lower comment out below) */
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,41);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,63);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,100);
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x50)(0xE7)(0xFC)(0x0A).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x50)(0x9E)(0x4)(0x2F).convert_to_container<std::vector<unsigned char> >();
+
+        // Honey dns seeds
+         vSeeds.push_back(CDNSSeedData("Seed01",  "91.134.120.210"));
+         vSeeds.push_back(CDNSSeedData("Seed02",  "64.137.250.17"));
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
@@ -134,20 +146,43 @@ public:
 
         // Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nBits  = bnProofOfWorkLimit.GetCompact();
-        genesis.nTime    = 1488654452;
-        genesis.nNonce = 73;
+        genesis.nTime    = 1489195700; // Sat, 11 Mar 2017 01:28:20 GMT
+        genesis.nNonce = 55;
+
+        // Build the genesis block. Note that the output of the genesis coinbase cannot
+        // be spent as it did not originally exist in the database.
+        //
+        // Hashed TestNet Genesis Block Output
+        // block.hashMerkleRoot == aa86eee12eff9c70d06949ec0185bcfdc08098e59408f41ee2c3063afb9a40da
+        // block.nTime = 1489195700
+        // block.nNonce = 55
+        // block.GetHash = 00357bab563c48a74a593d12a6ea0804a77ae7718cebaf300be6553387681b99
+        //
 
         hashGenesisBlock = genesis.GetHash();
-        assert(hashGenesisBlock == uint256("0x9d6981749d2288cd9616eb61fad4da81aca5f11407e947c37b8ba502ee3f73a9"));
+        assert(hashGenesisBlock == uint256("0x00357bab563c48a74a593d12a6ea0804a77ae7718cebaf300be6553387681b99"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
 
+        /** DEPRICATED IN QT 5.6+ (To compile on Qt5.5.1 and lower uncomment  */
+        /*
         base58Prefixes[PUBKEY_ADDRESS] = list_of(100);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(125);
-        base58Prefixes[SECRET_KEY]     = list_of(41);
+        base58Prefixes[SECRET_KEY] =     list_of(41);
         base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x1D)(0x9B)(0x7F)(0x74);
         base58Prefixes[EXT_SECRET_KEY] = list_of(0x1D)(0xC0)(0xFC)(0x28);
+        */
+        /** REQUIRED IN QT 5.6+  (To compile on Qt5.5.1 and lower comment out below) */
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,100);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,41);
+        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x1D)(0x9B)(0x7F)(0x74).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x1D)(0xC0)(0xFC)(0x28).convert_to_container<std::vector<unsigned char> >();
+
+        // Honey dns seeds
+        // vSeeds.push_back(CDNSSeedData("Seed01",  "0.0.0.0"));
+        // vSeeds.push_back(CDNSSeedData("Seed02",  "0.0.0.0"));
 
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
