@@ -986,8 +986,14 @@ static CBigNum GetProofOfStakeLimit(int nHeight)
 int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
 {
     int64_t nSubsidy = 1 * COIN;
-
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d nHeight=%d\n", FormatMoney(nSubsidy), nSubsidy, nHeight);
+
+    // hardCap v2.1
+    if(pindexBest->nMoneySupply > MAX_MONEY)
+    {
+        LogPrint("MINEOUT", "GetProofOfWorkReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+        return nFees;
+    }
 
     return nSubsidy + nFees;
 }
@@ -996,8 +1002,14 @@ int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
 int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees, int nHeight)
 {
     int64_t nSubsidy = 2 * COIN;
-
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d nHeight=%d\n", FormatMoney(nSubsidy), nCoinAge, nHeight);
+
+    // hardCap v2.1
+    if(pindexBest->nMoneySupply > MAX_MONEY)
+    {
+      LogPrint("MINEOUT", "GetProofOfStakeReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+      return nFees;
+    }
 
     return nSubsidy + nFees;
 }

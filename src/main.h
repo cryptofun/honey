@@ -48,23 +48,14 @@ static const int64_t MIN_TX_FEE = 100;
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying) */
 static const int64_t MIN_RELAY_TX_FEE = MIN_TX_FEE;
 /** No amount larger than this (in satoshi) is valid */
-static const int64_t MAX_MONEY = 7000000;
+static const int64_t MAX_MONEY = 7000000 * COIN;
 inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 /** Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp. */
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
 
-//inline bool IsProtocolV2(int nHeight) { return TestNet() || nHeight > 100000; }
-//inline bool IsProtocolV3(int nHeight) { return TestNet() || nHeight > 114000; } //revert back to old difficulty setting, staking problem
-//inline bool IsProtocolV4(int nHeight) { return TestNet() || nHeight > 291111; } //march 2017 hard fork, future drift adjustments
-
-//inline int64_t FutureDriftV1(int64_t nTime) { return nTime + 5 * 60; }
-//inline int64_t FutureDriftV2(int64_t nTime) { return nTime + 15; } // Protocol V4
-//inline int64_t FutureDriftV4(int64_t nTime, int nHeight) { return nTime + 60 * 60; } // Protocol V4, PoW future drift change
-//inline int64_t FutureDrift(int64_t nTime, int nHeight) { return IsProtocolV4(nHeight) ? FutureDriftV2(nTime) : FutureDriftV1(nTime); }
-
 inline int64_t FutureDrift(int64_t nTime, int nHeight) { return nTime + 60 * 60; }
 
-inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 182 : 60; }  // increase block target at block height 15000
+inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 182 : 60; }  // increase block target at block height 20000
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
