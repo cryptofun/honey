@@ -39,7 +39,6 @@ map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
-CBigNum bnProofOfStakeLimitV2(~uint256(0) >> 48);
 
 unsigned int nStakeMinAge = 1 * 60 * 60; // 1 hour
 unsigned int nModifierInterval = 5 * 60; // time to elapse before new modifier is computed
@@ -980,13 +979,6 @@ void static PruneOrphanBlocks()
 
 static CBigNum GetProofOfStakeLimit(int nHeight)
 {
-//    if (IsProtocolV3(nHeight))
-//        return bnProofOfStakeLimit;
-//
-//    else if (IsProtocolV2(nHeight))
-//         return bnProofOfStakeLimitV2;
-//
-//    else
         return bnProofOfStakeLimit;
 }
 
@@ -994,8 +986,6 @@ static CBigNum GetProofOfStakeLimit(int nHeight)
 int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
 {
     int64_t nSubsidy = 1 * COIN;
-
-    nSubsidy >>= (pindexBest->nHeight / 2628000);
 
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d nHeight=%d\n", FormatMoney(nSubsidy), nSubsidy, nHeight);
 
@@ -1006,9 +996,6 @@ int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
 int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees, int nHeight)
 {
     int64_t nSubsidy = 2 * COIN;
-
-    nSubsidy >>= (pindexBest->nHeight / 2628000);
-
 
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d nHeight=%d\n", FormatMoney(nSubsidy), nCoinAge, nHeight);
 
