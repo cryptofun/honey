@@ -106,6 +106,8 @@ public:
         // Honey dns seeds
          vSeeds.push_back(CDNSSeedData("Seed01",  "91.134.120.210"));
          vSeeds.push_back(CDNSSeedData("Seed02",  "64.137.250.17"));
+         vSeeds.push_back(CDNSSeedData("bit-coin.pw", "node.bit-coin.pw")); // seed nodes from user krilson
+         vSeeds.push_back(CDNSSeedData("bit-coin.pw", "krile.bit-coin.pw")); // seed nodes from user krilson
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
