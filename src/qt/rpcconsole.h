@@ -35,6 +35,8 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     /** open the debug.log from the current datadir */
     void on_openDebugLogfileButton_clicked();
+    /** open the honey.conf file from the current datadir */
+    void on_openConfigurationfileButton_clicked();
     /** display messagebox with program parameters (same as honey-qt --help) */
     void on_showCLOptionsButton_clicked();
     /** change the time range of the network traffic graph */
