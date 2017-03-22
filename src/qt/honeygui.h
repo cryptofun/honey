@@ -70,6 +70,8 @@ private:
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
+    BlockBrowser *blockBrowserPage;
+
 
     QLabel *labelEncryptionIcon;
     QLabel *labelStakingIcon;
@@ -107,7 +109,6 @@ private:
     Notificator *notificator;
     TransactionView *transactionView;
     RPCConsole *rpcConsole;
-    BlockBrowser *blockBrowser;
 
     QMovie *syncIconMovie;
     /** Keep track of previous number of blocks, to detect progress */

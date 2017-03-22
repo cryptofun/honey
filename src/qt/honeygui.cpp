@@ -82,9 +82,9 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     rpcConsole(0),
     prevBlocks(0),
     nWeight(0),
-    blockBrowser(0)
+    blockBrowserPage(0)
 {
-    resize(710, 540);
+    resize(1030, 550); //resized to fit the BE page within the wallet without a manual resize
     setWindowTitle(tr("Honey") + " - " + tr("Wallet"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/honey"));
@@ -110,7 +110,8 @@ HoneyGUI::HoneyGUI(QWidget *parent):
 
     // Create tabs
     overviewPage = new OverviewPage();
-    blockBrowser = new BlockBrowser(this);
+    blockBrowserPage = new BlockBrowser(this);
+
 
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -132,7 +133,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     centralStackedWidget->addWidget(addressBookPage);
     centralStackedWidget->addWidget(receiveCoinsPage);
     centralStackedWidget->addWidget(sendCoinsPage);
-    centralStackedWidget->addWidget(blockBrowser);
+    centralStackedWidget->addWidget(blockBrowserPage);
 
     QWidget *centralWidget = new QWidget();
     QVBoxLayout *centralLayout = new QVBoxLayout(centralWidget);
@@ -212,8 +213,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     rpcConsole = new RPCConsole(this);
     connect(openRPCConsoleAction, SIGNAL(triggered()), rpcConsole, SLOT(show()));
 
-    blockBrowser = new BlockBrowser(this);
-    connect(blockAction, SIGNAL(triggered()), blockBrowser, SLOT(show()));
+    connect(blockAction, SIGNAL(triggered()), blockBrowserPage, SLOT(gotoBlockBrowser()));
 
     // prevents an oben debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
@@ -474,6 +474,7 @@ void HoneyGUI::setWalletModel(WalletModel *walletModel)
         receiveCoinsPage->setModel(walletModel->getAddressTableModel());
         sendCoinsPage->setModel(walletModel);
         signVerifyMessageDialog->setModel(walletModel);
+        blockBrowserPage->setModel(clientModel);
 
         setEncryptionStatus(walletModel->getEncryptionStatus());
         connect(walletModel, SIGNAL(encryptionStatusChanged(int)), this, SLOT(setEncryptionStatus(int)));
@@ -818,9 +819,14 @@ void HoneyGUI::gotoAddressBookPage()
 void HoneyGUI::gotoBlockBrowser(QString transactionId)
 {
     if(!transactionId.isEmpty())
-    blockBrowser->setTransactionId(transactionId);
+    {
+        blockBrowserPage->setTransactionId(transactionId);
+    }
+    centralStackedWidget->setCurrentWidget(blockBrowserPage);
 
-    blockBrowser->show();
+    exportAction->setEnabled(true);
+    disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+    connect(exportAction, SIGNAL(triggered()), blockBrowserPage, SLOT(exportClicked()));
 }
 
 void HoneyGUI::gotoReceiveCoinsPage()
