@@ -55,7 +55,7 @@ static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20
 
 inline int64_t FutureDrift(int64_t nTime, int nHeight) { return nTime + 60 * 60; }
 
-inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 182 : 60; }  // increase block target at block height 20000
+inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 300 : 60; }  // fork to 5min block time
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
