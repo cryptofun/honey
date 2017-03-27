@@ -213,7 +213,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     rpcConsole = new RPCConsole(this);
     connect(openRPCConsoleAction, SIGNAL(triggered()), rpcConsole, SLOT(show()));
 
-    connect(blockAction, SIGNAL(triggered()), blockBrowserPage, SLOT(gotoBlockBrowser()));
+    //connect(blockAction, SIGNAL(triggered()), blockBrowserPage, SLOT(gotoBlockBrowser()));
 
     // prevents an oben debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), rpcConsole, SLOT(hide()));
@@ -271,6 +271,12 @@ void HoneyGUI::createActions()
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(addressBookAction);
 
+    blockAction = new QAction(QIcon(":/icons/blockbrowser"), tr("&Block Browser"), this);
+    blockAction->setToolTip(tr("Explore the BlockChain"));
+    blockAction->setCheckable(true);
+    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
+    tabGroup->addAction(blockAction);
+
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(receiveCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -281,6 +287,8 @@ void HoneyGUI::createActions()
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(addressBookAction, SIGNAL(triggered()), this, SLOT(gotoAddressBookPage()));
+    connect(blockAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
     quitAction->setToolTip(tr("Quit application"));
@@ -314,9 +322,6 @@ void HoneyGUI::createActions()
     openRPCConsoleAction = new QAction(QIcon(":/icons/debugwindow"), tr("&Debug window"), this);
     openRPCConsoleAction->setToolTip(tr("Open debugging and diagnostic console"));
 
-    blockAction = new QAction(QIcon(":/icons/blockbrowser"), tr("&Block Browser"), this);
-    blockAction->setToolTip(tr("Explore the BlockChain"));
-
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(aboutClicked()));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -329,7 +334,6 @@ void HoneyGUI::createActions()
     connect(lockWalletAction, SIGNAL(triggered()), this, SLOT(lockWallet()));
     connect(signMessageAction, SIGNAL(triggered()), this, SLOT(gotoSignMessageTab()));
     connect(verifyMessageAction, SIGNAL(triggered()), this, SLOT(gotoVerifyMessageTab()));
-    connect(blockAction, SIGNAL(triggered()), this, SLOT(gotoBlockBrowser()));
 }
 
 void HoneyGUI::createMenuBar()
@@ -378,6 +382,7 @@ void HoneyGUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     QWidget* header = new QWidget();
+    toolbar->setStyleSheet("QToolButton { color: #000000; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
     header->setMinimumSize(160, 116);
     header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     header->setStyleSheet("QWidget { background-repeat: no-repeat; background-image: url(:/images/header); background-position: top center; }");
@@ -818,6 +823,7 @@ void HoneyGUI::gotoAddressBookPage()
 
 void HoneyGUI::gotoBlockBrowser(QString transactionId)
 {
+    blockAction->setChecked(true);
     if(!transactionId.isEmpty())
     {
         blockBrowserPage->setTransactionId(transactionId);
