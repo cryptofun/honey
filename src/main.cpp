@@ -1022,7 +1022,7 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
     return pindex;
 }
 
-unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake)
+unsigned int PeercoinDiff(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
     CBigNum bnTargetLimit = fProofOfStake ? GetProofOfStakeLimit(pindexLast->nHeight) : Params().ProofOfWorkLimit();
 
@@ -1057,6 +1057,92 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
         bnNew = bnTargetLimit;
 
     return bnNew.GetCompact();
+}
+
+unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
+{
+    // DarkGravityWave v3.1, written by Evan Duffield - evan@dashpay.io
+    // Modified & revised by bitbandi for PoW support [implementation (fork) cleanup done by CryptoCoderz]
+    const CBigNum nProofOfWorkLimit = fProofOfStake ? bnProofOfStakeLimit : Params().ProofOfWorkLimit();
+    const CBlockIndex *BlockLastSolved = GetLastBlockIndex(pindexLast, fProofOfStake);
+    const CBlockIndex *BlockReading = BlockLastSolved;
+    int64_t nActualTimespan = 0;
+    int64_t LastBlockTime = 0;
+    int64_t PastBlocksMin = 7;
+    int64_t PastBlocksMax = 24;
+    int64_t CountBlocks = 0;
+    int64_t nTargetSpacing = GetTargetSpacing(pindexLast->nHeight);
+    CBigNum PastDifficultyAverage;
+    CBigNum PastDifficultyAveragePrev;
+
+            if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMax) {
+                return nProofOfWorkLimit.GetCompact();
+            }
+
+            for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
+                if (PastBlocksMax > 0 && i > PastBlocksMax) { break; }
+                CountBlocks++;
+
+                if(CountBlocks <= PastBlocksMin) {
+                    if (CountBlocks == 1) { PastDifficultyAverage.SetCompact(BlockReading->nBits); }
+                    else { PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (CBigNum().SetCompact(BlockReading->nBits))) / (CountBlocks + 1); }
+                    PastDifficultyAveragePrev = PastDifficultyAverage;
+                }
+
+                if(LastBlockTime > 0){
+                    int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
+                    nActualTimespan += Diff;
+                }
+                LastBlockTime = BlockReading->GetBlockTime();
+                BlockReading = GetLastBlockIndex(BlockReading->pprev, fProofOfStake);
+            }
+
+            CBigNum bnNew(PastDifficultyAverage);
+
+            int64_t _nTargetTimespan = CountBlocks * nTargetSpacing;
+
+            if (nActualTimespan < _nTargetTimespan/3)
+                nActualTimespan = _nTargetTimespan/3;
+            if (nActualTimespan > _nTargetTimespan*3)
+                nActualTimespan = _nTargetTimespan*3;
+
+            // Retarget
+            bnNew *= nActualTimespan;
+            bnNew /= _nTargetTimespan;
+
+            if (bnNew > nProofOfWorkLimit){
+                bnNew = nProofOfWorkLimit;
+            }
+
+            return bnNew.GetCompact();
+}
+
+unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake)
+{
+    // Initialize with DGW selected
+    unsigned int retarget = DIFF_DGW;
+
+    /* Chain starts with Peercoin per-block restarget,
+       PPC retarget difficulty runs for the initial blocks */
+    //if(pindexBest->nHeight < nGravityFork)
+    if(!TestNet())
+    {
+        retarget = DIFF_PPC;
+        // debug info for testing
+        // LogPrintf("PPC per-block retarget selected \n");
+    }
+    // Retarget using PPC
+    if (retarget == DIFF_PPC)
+    {
+        // debug info for testing
+        //LogPrintf("Honey retargetted using: PPC difficulty algo \n");
+        return PeercoinDiff(pindexLast, fProofOfStake);
+    }
+    // Retarget using Dark Gravity Wave v3
+    // debug info for testing
+    // LogPrintf("DarkGravityWave retarget selected \n");
+    //LogPrintf("Honey retargetted using: DGW-v3 difficulty algo \n");
+    return DarkGravityWave(pindexLast, fProofOfStake);
 }
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits)

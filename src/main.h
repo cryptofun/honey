@@ -17,6 +17,13 @@
 #include <limits>
 #include <list>
 
+// Define difficulty retarget algorithms
+enum DiffMode {
+    DIFF_DEFAULT = 0, // Default to invalid 0
+    DIFF_PPC     = 1, // Retarget using Peercoin per-block
+    DIFF_DGW     = 2, // Retarget using DarkGravityWave v3
+};
+
 class CBlock;
 class CBlockIndex;
 class CInv;
@@ -52,9 +59,9 @@ static const int64_t MAX_MONEY = 7000000 * COIN;
 inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 /** Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp. */
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
-
+/** FutureDrift parameters */
 inline int64_t FutureDrift(int64_t nTime, int nHeight) { return nTime + 60 * 60; }
-
+/** Block target spacing defines */
 inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 182 : 60; }  // increase block target at block height 20000
 
 extern CScript COINBASE_FLAGS;
