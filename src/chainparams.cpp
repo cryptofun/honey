@@ -52,8 +52,8 @@ public:
         pchMessageStart[1] = 0xfb;
         pchMessageStart[2] = 0x13;
         pchMessageStart[3] = 0x4e;
-        nDefaultPort = 7799;
-        nRPCPort = 9977;
+        nDefaultPort = 40638;
+        nRPCPort = 40639;
         bnProofOfWorkLimit = CBigNum(~uint256(0) >> 20);
 
         // Build the genesis block. Note that the output of the genesis coinbase cannot
