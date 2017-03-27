@@ -9,7 +9,7 @@ Algorithm:              Blake2s
 
 Difficulty Retarget:    Every Block
 
-Block Time:             5 Minutes
+Block Time:             3 Minutes
 
 Block Rewards:          Both POW and POS Have Static Rewards.
 

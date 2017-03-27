@@ -105,7 +105,7 @@
         <x>0</x>
         <y>30</y>
         <width>812</width>
-        <height>410</height>
+        <height>441</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayoutBE" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0">
@@ -453,19 +453,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QPushButton" name="closeButton">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>470</y>
-        <width>75</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Close</string>
-      </property>
      </widget>
     </widget>
    </item>
