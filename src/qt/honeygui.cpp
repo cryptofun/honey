@@ -84,7 +84,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     nWeight(0),
     blockBrowserPage(0)
 {
-    resize(1030, 550); //resized to fit the BE page within the wallet without a manual resize
+    resize(825, 550); // Corrected BE page layout, wallet is now cleaner and more compact
     setWindowTitle(tr("Honey") + " - " + tr("Wallet"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/honey"));

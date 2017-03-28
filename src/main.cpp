@@ -1124,8 +1124,7 @@ unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfS
 
     /* Chain starts with Peercoin per-block restarget,
        PPC retarget difficulty runs for the initial blocks */
-    //if(pindexBest->nHeight < nGravityFork)
-    if(!TestNet())
+    if(pindexBest->nHeight < nGravityFork)
     {
         retarget = DIFF_PPC;
         // debug info for testing
