@@ -382,7 +382,10 @@ void HoneyGUI::createToolBars()
     toolbar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     QWidget* header = new QWidget();
-    toolbar->setStyleSheet("QToolButton { color: #000000; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
+    if (!fUseBlackTheme)
+        toolbar->setStyleSheet("QToolButton { color: #000000; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
+    else if (fUseBlackTheme)
+        toolbar->setStyleSheet("QToolButton { color: #ffffff; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
     header->setMinimumSize(160, 116);
     header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     header->setStyleSheet("QWidget { background-repeat: no-repeat; background-image: url(:/images/header); background-position: top center; }");
