@@ -988,11 +988,12 @@ int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
     int64_t nSubsidy = 1 * COIN;
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d nHeight=%d\n", FormatMoney(nSubsidy), nSubsidy, nHeight);
 
-    // hardCap v2.1
+    // hardCap v2.2
     if(pindexBest->nMoneySupply > MAX_MONEY)
     {
+        nSubsidy = 0;
         LogPrint("MINEOUT", "GetProofOfWorkReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
-        return nFees;
+        return nSubsidy + nFees;
     }
 
     return nSubsidy + nFees;
@@ -1004,11 +1005,12 @@ int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees, int nHeight)
     int64_t nSubsidy = 2 * COIN;
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d nHeight=%d\n", FormatMoney(nSubsidy), nCoinAge, nHeight);
 
-    // hardCap v2.1
+    // hardCap v2.2
     if(pindexBest->nMoneySupply > MAX_MONEY)
     {
-      LogPrint("MINEOUT", "GetProofOfStakeReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
-      return nFees;
+        nSubsidy = 0;
+        LogPrint("MINEOUT", "GetProofOfStakeReward(): create=%s nFees=%d\n", FormatMoney(nFees), nFees);
+        return nSubsidy + nFees;
     }
 
     return nSubsidy + nFees;
@@ -1063,6 +1065,7 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
     // DarkGravityWave v3.1, written by Evan Duffield - evan@dashpay.io
     // Modified & revised by bitbandi for PoW support [implementation (fork) cleanup done by CryptoCoderz]
+    // Modified for Honey: softfork block set to min diff to re-engage chain movement
     const CBigNum nProofOfWorkLimit = fProofOfStake ? bnProofOfStakeLimit : Params().ProofOfWorkLimit();
     const CBlockIndex *BlockLastSolved = GetLastBlockIndex(pindexLast, fProofOfStake);
     const CBlockIndex *BlockReading = BlockLastSolved;
@@ -1078,6 +1081,10 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
             if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMax) {
                 return nProofOfWorkLimit.GetCompact();
             }
+
+            // Honey chain jumpstart with dgw
+            if (BlockLastSolved->nHeight == nGravityFork)
+                return nProofOfWorkLimit.GetCompact();
 
             for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
                 if (PastBlocksMax > 0 && i > PastBlocksMax) { break; }
