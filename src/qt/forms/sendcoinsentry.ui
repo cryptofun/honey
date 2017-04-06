@@ -85,6 +85,9 @@
        <property name="toolTip">
         <string>Choose address from address book</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -102,6 +105,9 @@
        <property name="toolTip">
         <string>Paste address from clipboard</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -118,6 +124,9 @@
       <widget class="QToolButton" name="deleteButton">
        <property name="toolTip">
         <string>Remove this recipient</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
        </property>
        <property name="text">
         <string/>
@@ -141,15 +150,15 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>HoneyAmountField</class>
+   <extends>QSpinBox</extends>
+   <header>honeyamountfield.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>QValidatedLineEdit</class>
    <extends>QLineEdit</extends>
    <header>qvalidatedlineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>HoneyAmountField</class>
-   <extends>QLineEdit</extends>
-   <header>honeyamountfield.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

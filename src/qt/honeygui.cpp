@@ -85,7 +85,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
     blockBrowserPage(0)
 {
     resize(825, 550); // Corrected BE page layout, wallet is now cleaner and more compact
-    setWindowTitle(tr("Honey") + " - " + tr("Wallet"));
+    setWindowTitle(tr("Honey") + " - " + tr("Pot"));
 #ifndef Q_OS_MAC
     qApp->setWindowIcon(QIcon(":icons/honey"));
     setWindowIcon(QIcon(":icons/honey"));
@@ -194,7 +194,7 @@ HoneyGUI::HoneyGUI(QWidget *parent):
         QString curStyle = qApp->style()->metaObject()->className();
         if(curStyle == "QWindowsStyle" || curStyle == "QWindowsXPStyle")
         {
-            progressBar->setStyleSheet("QProgressBar { background-color: #e8e8e8; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
+            progressBar->setStyleSheet("QProgressBar { background-color: #ffd377; border: 1px solid grey; border-radius: 7px; padding: 1px; text-align: center; } QProgressBar::chunk { background: QLinearGradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0 #FF8000, stop: 1 orange); border-radius: 7px; margin: 0px; }");
         }
     }
 
@@ -383,9 +383,9 @@ void HoneyGUI::createToolBars()
     toolbar->setContextMenuPolicy(Qt::PreventContextMenu);
     QWidget* header = new QWidget();
     if (!fUseBlackTheme)
-        toolbar->setStyleSheet("QToolButton { color: #000000; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
+        toolbar->setStyleSheet("QToolButton { font-weight:bold;} QToolButton:hover { background-color: #fffbbd } QToolButton:checked { background-color: #fffbbd} QToolButton:pressed { background-color: #ffaf00 } #tabs { background-color: #ffaf00; border: none }");
     else if (fUseBlackTheme)
-        toolbar->setStyleSheet("QToolButton { color: #ffffff; font-weight:bold;} QToolButton:hover { background-color: #ff9900 } QToolButton:checked { background-color: #ffcc80 } QToolButton:pressed { background-color: #b36b00 } #tabs { color: #000000; background-color: #ffcc99; border: none }");
+        toolbar->setStyleSheet("QToolButton { color: #ffaf00; font-weight:bold;} QToolButton:hover { color: #ffaf00; background-color: #fffbbd } QToolButton:checked { color: #ffaf00; background-color: #fffbbd } QToolButton:pressed { color: #fffbbd; background-color: #ffaf00 } #tabs { background-color: #fffbbd; border: none }");
     header->setMinimumSize(160, 116);
     header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     header->setStyleSheet("QWidget { background-repeat: no-repeat; background-image: url(:/images/header); background-position: top center; }");
@@ -402,14 +402,14 @@ void HoneyGUI::createToolBars()
 
     toolbar->addWidget(makeToolBarSpacer());
 
-    QWidget* mineWidget = new QWidget();
-    mineWidget->setMinimumSize(160,40);
-    mineWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    mineWidget->setObjectName("mineWidget");
-    mineWidget->setStyleSheet("#mineWidget");
-    QVBoxLayout *mbox = new QVBoxLayout();
-    mineWidget->setLayout(mbox);
-    toolbar->addWidget(mineWidget);
+    //QWidget* mineWidget = new QWidget();
+    //mineWidget->setMinimumSize(160,40);
+    //mineWidget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    //mineWidget->setObjectName("mineWidget");
+    //mineWidget->setStyleSheet("#mineWidget");
+    //QVBoxLayout *mbox = new QVBoxLayout();
+    //mineWidget->setLayout(mbox);
+    //toolbar->addWidget(mineWidget);
 
     toolbar->setOrientation(Qt::Vertical);
     toolbar->setMovable(false);

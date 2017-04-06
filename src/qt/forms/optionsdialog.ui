@@ -23,7 +23,7 @@
       <enum>QTabWidget::North</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tabMain">
       <attribute name="title">
@@ -321,6 +321,9 @@
            <property name="toolTip">
             <string>The user interface language can be set here. This setting will take effect after restarting Honey.</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
+           </property>
           </widget>
          </item>
         </layout>
@@ -344,6 +347,9 @@
           <widget class="QValueComboBox" name="unit">
            <property name="toolTip">
             <string>Choose the default subdivision unit to show in the interface and when sending coins.</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
            </property>
           </widget>
          </item>
@@ -432,6 +438,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="okButton">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;OK</string>
        </property>
@@ -439,6 +448,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="cancelButton">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;Cancel</string>
        </property>
@@ -449,6 +461,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="applyButton">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;Apply</string>
        </property>
@@ -466,6 +481,7 @@
    <class>HoneyAmountField</class>
    <extends>QSpinBox</extends>
    <header>honeyamountfield.h</header>
+   <container>1</container>
   </customwidget>
   <customwidget>
    <class>QValueComboBox</class>

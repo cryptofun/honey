@@ -23,7 +23,7 @@
       <attribute name="title">
        <string>&amp;Information</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0">
+      <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
        <property name="horizontalSpacing">
         <number>12</number>
        </property>
@@ -163,6 +163,9 @@
          <property name="toolTip">
           <string>Open the Honey debug log file from the current data directory. This can take a few seconds for large log files.</string>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 175, 0);</string>
+         </property>
          <property name="text">
           <string>&amp;Open</string>
          </property>
@@ -188,6 +191,9 @@
         <widget class="QPushButton" name="showCLOptionsButton">
          <property name="toolTip">
           <string>Show the Honey-Qt help message to get a list with possible Honey command-line options.</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 175, 0);</string>
          </property>
          <property name="text">
           <string>&amp;Show</string>
@@ -353,6 +359,9 @@
          <property name="toolTip">
           <string>Open the Honey configuration file from the current data directory.</string>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 175, 0);</string>
+         </property>
          <property name="text">
           <string>O&amp;pen</string>
          </property>
@@ -423,6 +432,9 @@
            <property name="toolTip">
             <string>Clear console</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -463,6 +475,9 @@
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QSlider" name="sldGraphRange">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="minimum">
               <number>1</number>
              </property>
@@ -495,6 +510,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="btnClearTrafficGraph">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(255, 175, 0);</string>
+             </property>
              <property name="text">
               <string>&amp;Clear</string>
              </property>

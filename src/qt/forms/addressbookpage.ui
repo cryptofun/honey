@@ -59,6 +59,9 @@
        <property name="toolTip">
         <string>Create a new address</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;New Address</string>
        </property>
@@ -69,6 +72,9 @@
        <property name="toolTip">
         <string>Copy the currently selected address to the system clipboard</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;Copy Address</string>
        </property>
@@ -76,6 +82,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="showQRCode">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>Show &amp;QR Code</string>
        </property>
@@ -85,6 +94,9 @@
       <widget class="QPushButton" name="signMessage">
        <property name="toolTip">
         <string>Sign a message to prove you own a Honey address</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
        </property>
        <property name="text">
         <string>Sign &amp;Message</string>
@@ -96,6 +108,9 @@
        <property name="toolTip">
         <string>Verify a message to ensure it was signed with a specified Honey address</string>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="text">
         <string>&amp;Verify Message</string>
        </property>
@@ -105,6 +120,9 @@
       <widget class="QPushButton" name="deleteButton">
        <property name="toolTip">
         <string>Delete the currently selected address from the list</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
        </property>
        <property name="text">
         <string>&amp;Delete</string>
@@ -132,6 +150,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(255, 175, 0);</string>
+       </property>
        <property name="standardButtons">
         <set>QDialogButtonBox::Ok</set>
        </property>
@@ -141,8 +162,6 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../honey.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

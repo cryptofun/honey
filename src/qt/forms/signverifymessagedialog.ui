@@ -263,6 +263,9 @@
            <property name="toolTip">
             <string>Choose an address from the address book</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -293,6 +296,9 @@
            <property name="toolTip">
             <string>Verify the message to ensure it was signed with the specified Honey address</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
+           </property>
            <property name="text">
             <string>&amp;Verify Message</string>
            </property>
@@ -309,6 +315,9 @@
           <widget class="QPushButton" name="clearButton_VM">
            <property name="toolTip">
             <string>Reset all verify message fields</string>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 175, 0);</string>
            </property>
            <property name="text">
             <string>Clear &amp;All</string>

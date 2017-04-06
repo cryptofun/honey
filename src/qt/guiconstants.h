@@ -15,8 +15,10 @@ static const int STATUSBAR_ICONSIZE = 16;
 
 /* Transaction list -- unconfirmed transaction */
 #define COLOR_UNCONFIRMED QColor(128, 128, 128)
+/* Transaction list -- positive amount */
+#define COLOR_POSITIVE QColor("green")
 /* Transaction list -- negative amount */
-#define COLOR_NEGATIVE QColor(255, 0, 0)
+#define COLOR_NEGATIVE QColor("red")
 /* Transaction list -- bare address (without label) */
 #define COLOR_BAREADDRESS QColor(140, 140, 140)
 

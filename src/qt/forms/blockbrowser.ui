@@ -105,7 +105,7 @@
         <x>0</x>
         <y>30</y>
         <width>601</width>
-        <height>401</height>
+        <height>441</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayoutBE" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" columnstretch="0,0">
@@ -266,6 +266,9 @@
        </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="blockButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 175, 0);</string>
+         </property>
          <property name="text">
           <string>Jump to Block</string>
          </property>
@@ -286,6 +289,9 @@
        </item>
        <item row="13" column="1">
         <widget class="QPushButton" name="txButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(255, 175, 0);</string>
+         </property>
          <property name="text">
           <string>Decode Transaction</string>
          </property>
