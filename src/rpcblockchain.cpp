@@ -101,8 +101,7 @@ double GetPoSKernelPS()
     if (nStakesTime)
         result = dStakeKernelsTriedAvg / nStakesTime;
 
-    //if (IsProtocolV2(nBestHeight))
-    if (nBestHeight)
+    if (IsHoneyV2(nBestHeight))
         result *= STAKE_TIMESTAMP_MASK + 1;
 
     return result;
@@ -289,6 +288,8 @@ Value getcheckpoint(const Array& params, bool fHelp)
     result.push_back(Pair("synccheckpoint", pindexCheckpoint->GetBlockHash().ToString().c_str()));
     result.push_back(Pair("height", pindexCheckpoint->nHeight));
     result.push_back(Pair("timestamp", DateTimeStrFormat(pindexCheckpoint->GetBlockTime()).c_str()));
+
+    result.push_back(Pair("policy", "rolling"));
 
     return result;
 }

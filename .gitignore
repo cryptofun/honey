@@ -16,6 +16,7 @@ src/build.h
 .qmake.stash
 Makefile
 honey-qt
+honey
 #resources cpp
 qrc_*.cpp
 #qt creator

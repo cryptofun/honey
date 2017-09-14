@@ -1,6 +1,6 @@
 TEMPLATE = app
-TARGET = honey-qt
-VERSION = 1.0.4.0
+TARGET = honey
+VERSION = 2.0.0.0
 INCLUDEPATH += src src/json src/qt
 QT += core gui widgets network
 DEFINES += ENABLE_WALLET
@@ -10,6 +10,7 @@ CONFIG += thread
 CONFIG += widgets
 CONFIG += static
 
+QMAKE_LFLAGS += -no-pie
 QMAKE_CFLAGS += -std=c99
 QMAKE_CXXFLAGS += -fpermissive -std=gnu++11
 
@@ -91,7 +92,7 @@ message(Building with UPNP support)
 count(USE_UPNP, 0) {
 USE_UPNP=1
 }
-DEFINES += DMINIUPNP_STATICLIB
+DEFINES += USE_UPNP=$$USE_UPNP DMINIUPNP_STATICLIB STATICLIB
 INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
 LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
 win32:LIBS += -liphlpapi

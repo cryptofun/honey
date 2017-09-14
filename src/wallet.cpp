@@ -23,7 +23,7 @@ int64_t nTransactionFee = MIN_TX_FEE;
 int64_t nReserveBalance = 0;
 int64_t nMinimumInputValue = 0;
 
-static int64_t GetStakeCombineThreshold() { return 100 * COIN; }
+static int64_t GetStakeCombineThreshold() { return 500 * COIN; }
 static int64_t GetStakeSplitThreshold() { return 2 * GetStakeCombineThreshold(); }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1132,12 +1132,18 @@ void CWallet::AvailableCoinsForStaking(vector<COutput>& vCoins, unsigned int nSp
             int nDepth = pcoin->GetDepthInMainChain();
             if (nDepth < 1)
                 continue;
-
-            if (nDepth < nCoinbaseMaturity)
-                continue;
+            if (IsHoneyV2(nSpendTime))
+             {
+                 if (nDepth < nStakeMinConfirmations)
+                 continue;
+             }
+             else
+             {
+                 if (nDepth < nCoinbaseMaturity)
+                 continue;
+             }
 
             if (pcoin->GetBlocksToMaturity() > 0)
-            if (nDepth < 1)
                 continue;
 
             for (unsigned int i = 0; i < pcoin->vout.size(); i++)
@@ -1409,7 +1415,8 @@ bool CWallet::CreateTransaction(const vector<pair<CScript, int64_t> >& vecSend, 
     // going ten blocks back. Doesn't yet do anything for sniping, but does act
     // to shake out wallet bugs like not showing nLockTime'd transactions at
     // all.
-    wtxNew.nLockTime = std::max(0, nBestHeight - 10);
+    if (!IsInitialBlockDownload())
+        wtxNew.nLockTime = std::max(0, nBestHeight - 10);
 
     // Secondly occasionally randomly pick a nLockTime even further back, so
     // that transactions that are delayed after signing for whatever reason,
@@ -1564,11 +1571,20 @@ uint64_t CWallet::GetStakeWeight() const
     LOCK2(cs_main, cs_wallet);
     BOOST_FOREACH(PAIRTYPE(const CWalletTx*, unsigned int) pcoin, setCoins)
     {
-        if (pcoin.first->GetDepthInMainChain() >= nCoinbaseMaturity)
+        if (IsHoneyV2(nCurrentTime))
+        {
+            if (pcoin.first->GetDepthInMainChain() >= nStakeMinConfirmations)
+                nWeight += pcoin.first->vout[pcoin.second].nValue;
+        }
+        else
+        {
+            if (pcoin.first->GetDepthInMainChain() >= nCoinbaseMaturity)
             nWeight += pcoin.first->vout[pcoin.second].nValue;
 
-        if (nCurrentTime - pcoin.first->nTime > nStakeMinAge)
+            if (nCurrentTime - pcoin.first->nTime > nStakeMinAge)
             nWeight += pcoin.first->vout[pcoin.second].nValue;
+        }
+
     }
 
     return nWeight;
@@ -1694,7 +1710,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             && pcoin.first->GetHash() != txNew.vin[0].prevout.hash)
         {
             // Stop adding more inputs if already too many inputs
-            if (txNew.vin.size() >= 100)
+            if (txNew.vin.size() >= 10)
                 break;
             // Stop adding inputs if reached reserve limit
             if (nCredit + pcoin.first->vout[pcoin.second].nValue > nBalance - nReserveBalance)
@@ -1709,14 +1725,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         }
     }
 
-    // Calculate coin age reward
+    // Calculate reward
     {
         uint64_t nCoinAge;
         CTxDB txdb("r");
         if (!txNew.GetCoinAge(txdb, pindexPrev, nCoinAge))
             return error("CreateCoinStake : failed to calculate coin age");
 
-        int64_t nReward = GetProofOfStakeReward(nCoinAge, nFees, pindexPrev->nHeight + 1);
+        int64_t nReward = GetProofOfStakeReward(pindexPrev, nCoinAge, nFees, pindexPrev->nHeight + 1);
         if (nReward <= 0)
             return false;
 

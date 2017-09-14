@@ -110,7 +110,7 @@ Value getstakesubsidy(const Array& params, bool fHelp)
     if (!tx.GetCoinAge(txdb, pindexBest, nCoinAge))
         throw JSONRPCError(RPC_MISC_ERROR, "GetCoinAge failed");
 
-    return (uint64_t)GetProofOfStakeReward(nCoinAge, 0, pindexBest->nHeight + 1);
+    return (uint64_t)GetProofOfStakeReward(pindexBest, nCoinAge, 0, pindexBest->nHeight + 1);
 }
 
 Value getmininginfo(const Array& params, bool fHelp)
@@ -201,8 +201,8 @@ Value checkkernel(const Array& params, bool fHelp)
     if (vNodes.empty())
         throw JSONRPCError(-9, "Honey is not connected!");
 
-    if (IsInitialBlockDownload())
-        throw JSONRPCError(-10, "Honey is downloading blocks...");
+    //if (IsInitialBlockDownload())
+    //    throw JSONRPCError(-10, "Honey is downloading blocks...");
 
     COutPoint kernel;
     CBlockIndex* pindexPrev = pindexBest;
@@ -537,7 +537,7 @@ Value getblocktemplate(const Array& params, bool fHelp)
             "  \"sizelimit\" : limit of block size\n"
             "  \"bits\" : compressed target of next block\n"
             "  \"height\" : height of the next block\n"
-            "See https://en.honey.it/wiki/BIP_0022 for full specification.");
+            "See https://en.bitcoin.it/wiki/BIP_0022 for full specification.");
 
     std::string strMode = "template";
     if (params.size() > 0)
@@ -682,7 +682,7 @@ Value submitblock(const Array& params, bool fHelp)
             "submitblock <hex data> [optional-params-obj]\n"
             "[optional-params-obj] parameter is currently ignored.\n"
             "Attempts to submit new block to network.\n"
-            "See https://en.honey.it/wiki/BIP_0022 for full specification.");
+            "See https://en.bitcoin.it/wiki/BIP_0022 for full specification.");
 
     vector<unsigned char> blockData(ParseHex(params[0].get_str()));
     CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION);

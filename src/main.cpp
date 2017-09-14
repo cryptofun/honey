@@ -39,7 +39,9 @@ map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
+CBigNum bnProofOfStakeLimitV2(~uint256(0) >> 20);
 
+int nStakeMinConfirmations = 50;
 unsigned int nStakeMinAge = 1 * 60 * 60; // 1 hour
 unsigned int nModifierInterval = 5 * 60; // time to elapse before new modifier is computed
 
@@ -952,7 +954,7 @@ uint256 WantedByOrphan(const COrphanBlock* pblockOrphan)
 // Remove a random orphan block (which does not have any dependent orphans).
 void static PruneOrphanBlocks()
 {
-  size_t nMaxOrphanBlocksSize = GetArg("-maxorphanblocksmib", DEFAULT_MAX_ORPHAN_BLOCKS) * ((size_t) 1 << 20);
+    size_t nMaxOrphanBlocksSize = GetArg("-maxorphanblocksmib", DEFAULT_MAX_ORPHAN_BLOCKS) * ((size_t) 1 << 20);
     while (nOrphanBlocksSize > nMaxOrphanBlocksSize)
     {
         // Pick a random orphan block.
@@ -961,20 +963,20 @@ void static PruneOrphanBlocks()
         while (pos--) it++;
 
         // As long as this block has other orphans depending on it, move to one of those successors.
-               do {
-                   std::multimap<uint256, COrphanBlock*>::iterator it2 = mapOrphanBlocksByPrev.find(it->second->hashBlock);
-                   if (it2 == mapOrphanBlocksByPrev.end())
-                       break;
-                   it = it2;
-               } while(1);
+        do {
+            std::multimap<uint256, COrphanBlock*>::iterator it2 = mapOrphanBlocksByPrev.find(it->second->hashBlock);
+            if (it2 == mapOrphanBlocksByPrev.end())
+                break;
+            it = it2;
+        } while(1);
 
-               setStakeSeenOrphan.erase(it->second->stake);
-                    uint256 hash = it->second->hashBlock;
-                    nOrphanBlocksSize -= it->second->vchBlock.size();
-                    delete it->second;
-                    mapOrphanBlocksByPrev.erase(it);
-                    mapOrphanBlocks.erase(hash);
-                }
+        setStakeSeenOrphan.erase(it->second->stake);
+        uint256 hash = it->second->hashBlock;
+        nOrphanBlocksSize -= it->second->vchBlock.size();
+        delete it->second;
+        mapOrphanBlocksByPrev.erase(it);
+        mapOrphanBlocks.erase(hash);
+    }
 }
 
 static CBigNum GetProofOfStakeLimit(int nHeight)
@@ -999,8 +1001,8 @@ int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
     return nSubsidy + nFees;
 }
 
-// miner's coin stake reward based on coin age spent (coin-days)
-int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees, int nHeight)
+// miner's coin stake reward
+int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees, int nHeight)
 {
     int64_t nSubsidy = 2 * COIN;
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d nHeight=%d\n", FormatMoney(nSubsidy), nCoinAge, nHeight);
@@ -1205,7 +1207,6 @@ void static InvalidChainFound(CBlockIndex* pindexNew)
       DateTimeStrFormat("%x %H:%M:%S", pindexBest->GetBlockTime()));
 }
 
-
 void CBlock::UpdateTime(const CBlockIndex* pindexPrev)
 {
     nTime = max(GetBlockTime(), GetAdjustedTime());
@@ -1213,16 +1214,16 @@ void CBlock::UpdateTime(const CBlockIndex* pindexPrev)
 
 bool IsConfirmedInNPrevBlocks(const CTxIndex& txindex, const CBlockIndex* pindexFrom, int nMaxDepth, int& nActualDepth)
 {
-     for (const CBlockIndex* pindex = pindexFrom; pindex && pindexFrom->nHeight - pindex->nHeight < nMaxDepth; pindex = pindex->pprev)
-     {
-         if (pindex->nBlockPos == txindex.pos.nBlockPos && pindex->nFile == txindex.pos.nFile)
-         {
-             nActualDepth = pindexFrom->nHeight - pindex->nHeight;
-             return true;
-         }
-     }
+    for (const CBlockIndex* pindex = pindexFrom; pindex && pindexFrom->nHeight - pindex->nHeight < nMaxDepth; pindex = pindex->pprev)
+    {
+        if (pindex->nBlockPos == txindex.pos.nBlockPos && pindex->nFile == txindex.pos.nFile)
+        {
+            nActualDepth = pindexFrom->nHeight - pindex->nHeight;
+            return true;
+        }
+    }
 
-     return false;
+    return false;
 }
 
 bool CTransaction::DisconnectInputs(CTxDB& txdb)
@@ -1612,7 +1613,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         if (!vtx[1].GetCoinAge(txdb, pindex->pprev, nCoinAge))
             return error("ConnectBlock() : %s unable to get coin age for coinstake", vtx[1].GetHash().ToString());
 
-        int64_t nCalculatedStakeReward = GetProofOfStakeReward(nCoinAge, nFees, pindex->nHeight);
+        int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
 
         if (nStakeReward > nCalculatedStakeReward)
             return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
@@ -1921,14 +1922,26 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, const CBlockIndex* pindexPrev, uint64
         if (nTime < txPrev.nTime)
             return false;  // Transaction timestamp violation
 
-        // Read block header
-        CBlock block;
-        int nSpendDepth;
-             if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nCoinbaseMaturity - 1, nSpendDepth))
-             {
-                 LogPrint("coinage", "coin age skip nSpendDepth=%d\n", nSpendDepth + 1);
-                 continue; // only count coins meeting min confirmations requirement
-             }
+        if (IsHoneyV2(nTime))
+        {
+            int nSpendDepth;
+            if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nStakeMinConfirmations - 1, nSpendDepth))
+            {
+                LogPrint("coinage", "coin age skip nSpendDepth=%d\n", nSpendDepth + 1);
+                continue; // only count coins meeting min confirmations requirement
+            }
+        }
+        else
+        {
+            // Read block header
+            CBlock block;
+            int nSpendDepth;
+            if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nCoinbaseMaturity - 1, nSpendDepth))
+            {
+            LogPrint("coinage", "coin age skip nSpendDepth=%d\n", nSpendDepth + 1);
+                continue; // only count coins meeting min age requirement
+            }
+        }
 
         int64_t nValueIn = txPrev.vout[txin.prevout.n].nValue;
         bnCentSecond += CBigNum(nValueIn) * (nTime-txPrev.nTime) / CENT;
@@ -2112,20 +2125,17 @@ bool CBlock::AcceptBlock()
     CBlockIndex* pindexPrev = (*mi).second;
     int nHeight = pindexPrev->nHeight+1;
 
+    if (IsHoneyV2(nHeight) && nVersion < 7)
+        return DoS(100, error("AcceptBlock() : reject too old nVersion = %d", nVersion));
+    else if (!IsHoneyV2(nHeight) && nVersion > 7)
+        return DoS(100, error("AcceptBlock() : reject too new nVersion = %d", nVersion));
+
     if (IsProofOfWork() && nHeight > Params().LastPOWBlock())
         return DoS(100, error("AcceptBlock() : reject proof-of-work at height %d", nHeight));
 
     // Check coinbase timestamp
-    //if(IsProtocolV4(nHeight))
-    //      {
-    //        if (GetBlockTime() > FutureDriftV4((int64_t)vtx[0].nTime, nHeight))
-    //            return DoS(50, error("AcceptBlock() : coinbase timestamp is too early"));
-    //      }
-    //else
-    //      {
-            if (GetBlockTime() > FutureDrift((int64_t)vtx[0].nTime, nHeight))
-                return DoS(50, error("AcceptBlock() : coinbase timestamp is too early"));
-    //      }
+    if (GetBlockTime() > FutureDrift((int64_t)vtx[0].nTime, nHeight))
+        return DoS(50, error("AcceptBlock() : coinbase timestamp is too early"));
 
     // Check coinstake timestamp
     if (IsProofOfStake() && !CheckCoinStakeTimestamp(nHeight, GetBlockTime(), (int64_t)vtx[1].nTime))
@@ -2167,8 +2177,6 @@ bool CBlock::AcceptBlock()
     // Check that the block satisfies synchronized checkpoint
     if (!Checkpoints::CheckSync(nHeight))
         return error("AcceptBlock() : rejected by synchronized checkpoint");
-
-
 
     // Enforce rule that the coinbase starts with serialized block height
     CScript expect = CScript() << nHeight;
@@ -2233,6 +2241,15 @@ void PushGetBlocks(CNode* pnode, CBlockIndex* pindexBegin, uint256 hashEnd)
     pnode->PushMessage("getblocks", CBlockLocator(pindexBegin), hashEnd);
 }
 
+//bool static IsCanonicalBlockSignature(CBlock* pblock, bool checkLowS)
+//{
+//    if (pblock->IsProofOfWork()) {
+//        return pblock->vchBlockSig.empty();
+//    }
+//
+//    return checkLowS ? IsLowDERSignature(pblock->vchBlockSig, false) : IsDERSignature(pblock->vchBlockSig, false);
+//}
+
 bool ProcessBlock(CNode* pfrom, CBlock* pblock)
 {
     AssertLockHeld(cs_main);
@@ -2262,6 +2279,24 @@ bool ProcessBlock(CNode* pfrom, CBlock* pblock)
             return error("ProcessBlock() : block with timestamp before last checkpoint");
         }
     }
+
+//    if (!IsCanonicalBlockSignature(pblock, false)) {
+//        if (pfrom && pfrom->nVersion >= CANONICAL_BLOCK_SIG_VERSION) {
+//            pfrom->Misbehaving(100);
+//        }
+//
+//        return error("ProcessBlock(): bad block signature encoding");
+//    }
+//
+//    if (!IsCanonicalBlockSignature(pblock, true)) {
+//        if (pfrom && pfrom->nVersion >= CANONICAL_BLOCK_SIG_LOW_S_VERSION) {
+//            pfrom->Misbehaving(100);
+//            return error("ProcessBlock(): bad block signature encoding (low-s)");
+//        }
+//
+//        if (!EnsureLowS(pblock->vchBlockSig))
+//            return error("ProcessBlock(): EnsureLowS failed");
+//    }
 
     // Preliminary checks
     if (!pblock->CheckBlock())
@@ -2367,7 +2402,7 @@ bool CBlock::SignBlock(CWallet& wallet, int64_t nFees)
 
     if (nSearchTime > nLastCoinStakeSearchTime)
     {
-        int64_t nSearchInterval =  1;
+        int64_t nSearchInterval = 1;
         if (wallet.CreateCoinStake(wallet, nBits, nSearchInterval, nFees, txCoinStake, key))
         {
             if (txCoinStake.nTime >= pindexBest->GetPastTimeLimit()+1)
@@ -2419,24 +2454,24 @@ bool CBlock::CheckBlockSignature() const
     }
     else
     {
-         // Block signing key also can be encoded in the nonspendable output
-         // This allows to not pollute UTXO set with useless outputs e.g. in case of multisig staking
+        // Block signing key also can be encoded in the nonspendable output
+        // This allows to not pollute UTXO set with useless outputs e.g. in case of multisig staking
 
-         const CScript& script = txout.scriptPubKey;
-         CScript::const_iterator pc = script.begin();
-         opcodetype opcode;
-         valtype vchPushValue;
+        const CScript& script = txout.scriptPubKey;
+        CScript::const_iterator pc = script.begin();
+        opcodetype opcode;
+        valtype vchPushValue;
 
-         if (!script.GetOp(pc, opcode, vchPushValue))
-             return false;
-         if (opcode != OP_RETURN)
-             return false;
-         if (!script.GetOp(pc, opcode, vchPushValue))
-             return false;
-         if (!IsCompressedOrUncompressedPubKey(vchPushValue))
-             return false;
-         return CPubKey(vchPushValue).Verify(GetHash(), vchBlockSig);
-     }
+        if (!script.GetOp(pc, opcode, vchPushValue))
+            return false;
+        if (opcode != OP_RETURN)
+            return false;
+        if (!script.GetOp(pc, opcode, vchPushValue))
+            return false;
+        if (!IsCompressedOrUncompressedPubKey(vchPushValue))
+            return false;
+        return CPubKey(vchPushValue).Verify(GetHash(), vchBlockSig);
+    }
 
     return false;
 }
@@ -2511,6 +2546,7 @@ bool LoadBlockIndex(bool fAllowNew)
 
     if (TestNet())
     {
+        nStakeMinConfirmations = 10;
         nCoinbaseMaturity = 10; // test maturity is 10 blocks
     }
 
@@ -2821,6 +2857,12 @@ void static ProcessGetData(CNode* pfrom)
                 {
                     CBlock block;
                     block.ReadFromDisk((*mi).second);
+//
+//                    // previous versions could accept sigs with high s
+//                    if (!IsCanonicalBlockSignature(&block, true)) {
+//                        bool ret = EnsureLowS(block.vchBlockSig);
+//                        assert(ret);
+//                    }
 
                     pfrom->PushMessage("block", block);
 
