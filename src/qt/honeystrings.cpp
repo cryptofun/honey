@@ -109,7 +109,7 @@ QT_TRANSLATE_NOOP("honey-core", "Attempt to recover private keys from a corrupt 
 QT_TRANSLATE_NOOP("honey-core", "How many blocks to check at startup (default: 500, 0 = all)"),
 QT_TRANSLATE_NOOP("honey-core", "How thorough the block verification is (0-6, default: 1)"),
 QT_TRANSLATE_NOOP("honey-core", "Imports blocks from external blk000?.dat file"),
-QT_TRANSLATE_NOOP("honey-core", "Keep at most <n> unconnectable blocks in memory (default: %u)"),
+QT_TRANSLATE_NOOP("honey-core", "Keep at most <n> MiB of unconnectable blocks in memory (default: %u)"),
 QT_TRANSLATE_NOOP("honey-core", "Block creation options:"),
 QT_TRANSLATE_NOOP("honey-core", "Set minimum block size in bytes (default: 0)"),
 QT_TRANSLATE_NOOP("honey-core", "Set maximum block size in bytes (default: 250000)"),
@@ -151,7 +151,6 @@ QT_TRANSLATE_NOOP("honey-core", "Cannot resolve -bind address: '%s'"),
 QT_TRANSLATE_NOOP("honey-core", "Failed to listen on any port. Use -listen=0 if you want this."),
 QT_TRANSLATE_NOOP("honey-core", "Cannot resolve -externalip address: '%s'"),
 QT_TRANSLATE_NOOP("honey-core", "Invalid amount for -reservebalance=<amount>"),
-QT_TRANSLATE_NOOP("honey-core", "Unable to sign checkpoint, wrong checkpointkey?\n"),
 QT_TRANSLATE_NOOP("honey-core", "Loading block index..."),
 QT_TRANSLATE_NOOP("honey-core", "Error loading block database"),
 QT_TRANSLATE_NOOP("honey-core", "Loading wallet..."),
@@ -202,7 +201,4 @@ QT_TRANSLATE_NOOP("honey-core", "Error: Disk space is low!"),
 QT_TRANSLATE_NOOP("honey-core", ""
 "This is a pre-release test build - use at your own risk - do not use for "
 "mining or merchant applications"),
-QT_TRANSLATE_NOOP("honey-core", ""
-"WARNING: Invalid checkpoint found! Displayed transactions may not be "
-"correct! You may need to upgrade, or notify developers."),
 };
