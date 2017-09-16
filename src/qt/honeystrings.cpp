@@ -56,7 +56,6 @@ QT_TRANSLATE_NOOP("honey-core", "Always query for peer addresses via DNS lookup 
 QT_TRANSLATE_NOOP("honey-core", ""
 "Sync time with other nodes. Disable if time on your system is precise e.g. "
 "syncing with NTP (default: 1)"),
-QT_TRANSLATE_NOOP("honey-core", "Sync checkpoints policy (default: strict)"),
 QT_TRANSLATE_NOOP("honey-core", "Threshold for disconnecting misbehaving peers (default: 100)"),
 QT_TRANSLATE_NOOP("honey-core", ""
 "Number of seconds to keep misbehaving peers from reconnecting (default: "
@@ -196,7 +195,6 @@ QT_TRANSLATE_NOOP("honey-core", "Error"),
 QT_TRANSLATE_NOOP("honey-core", "Warning"),
 QT_TRANSLATE_NOOP("honey-core", "Information"),
 QT_TRANSLATE_NOOP("honey-core", "Warning: This version is obsolete, upgrade required!"),
-QT_TRANSLATE_NOOP("honey-core", "WARNING: syncronized checkpoint violation detected, but skipped!"),
 QT_TRANSLATE_NOOP("honey-core", "Error: Disk space is low!"),
 QT_TRANSLATE_NOOP("honey-core", ""
 "This is a pre-release test build - use at your own risk - do not use for "
