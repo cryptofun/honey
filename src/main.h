@@ -69,7 +69,7 @@ static const int64_t nGravityFork = 21153;
 /** Honey 1.0 */
 inline bool IsHoneyV1(int nHeight) { return TestNet() || nHeight > 0; }
 /** Honey 2.0 */
-inline bool IsHoneyV2(int64_t nTime) { return TestNet() || nTime > 1505952000; }
+inline bool IsHoneyV2(int64_t nTime) { return TestNet() || nTime > 1506816000; }
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
