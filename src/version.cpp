@@ -37,7 +37,7 @@ const std::string CLIENT_NAME("Honey");
 #define GIT_ARCHIVE 1
 #ifdef GIT_ARCHIVE
 #    define GIT_COMMIT_ID "-Honeypot"
-#    define GIT_COMMIT_DATE "Sep 15, 2017"
+#    define GIT_COMMIT_DATE "Sep 20, 2017"
 #endif
 
 #define BUILD_DESC_FROM_COMMIT(maj,min,rev,build,commit) \
