@@ -96,10 +96,6 @@ public:
 
         // Honey dns seeds
         vSeeds.push_back(CDNSSeedData("TheCryptoChat",  "honey.thecryptochat.net"));
-         // vSeeds.push_back(CDNSSeedData("Seed01",  "91.134.120.210"));
-         // vSeeds.push_back(CDNSSeedData("Seed02",  "64.137.250.17"));
-         // vSeeds.push_back(CDNSSeedData("bit-coin.pw", "node.bit-coin.pw")); // seed nodes from user krilson
-         // vSeeds.push_back(CDNSSeedData("bit-coin.pw", "krile.bit-coin.pw")); // seed nodes from user krilson
 
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
 
@@ -159,15 +155,6 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
-        /** DEPRICATED IN QT 5.6+ (To compile on Qt5.5.1 and lower uncomment  */
-        /*
-        base58Prefixes[PUBKEY_ADDRESS] = list_of(100);
-        base58Prefixes[SCRIPT_ADDRESS] = list_of(125);
-        base58Prefixes[SECRET_KEY] =     list_of(41);
-        base58Prefixes[EXT_PUBLIC_KEY] = list_of(0x1D)(0x9B)(0x7F)(0x74);
-        base58Prefixes[EXT_SECRET_KEY] = list_of(0x1D)(0xC0)(0xFC)(0x28);
-        */
-        /** REQUIRED IN QT 5.6+  (To compile on Qt5.5.1 and lower comment out below) */
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,100);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,41);

@@ -7,13 +7,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Honey-Qt</string>
+	<string>Honey</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleExecutable</key>
-	<string>Honey-Qt</string>
+	<string>Honey</string>
 	<key>CFBundleIdentifier</key>
-	<string>co.honey.Honey-Qt</string>
+	<string>co.honey.Honey</string>
         <key>CFBundleURLTypes</key>
         <array>
           <dict>

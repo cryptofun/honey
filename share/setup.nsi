@@ -7,7 +7,7 @@ SetCompressor /SOLID lzma
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 0.3.0
 !define COMPANY "Honey project"
-!define URL https://github.com/cryptostiltskin/honey/
+!define URL https://github.com/cryptofun/honey/
 
 # MUI Symbol Definitions
 !define MUI_ICON "../share/pixmaps/honey.ico"
@@ -20,7 +20,7 @@ SetCompressor /SOLID lzma
 !define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER Honey
-#!define MUI_FINISHPAGE_RUN $INSTDIR\honey-qt.exe
+#!define MUI_FINISHPAGE_RUN $INSTDIR\honey.exe
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "../share/pixmaps/nsis-wizard.bmp"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
@@ -45,7 +45,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile honey-0.3.0-win32-setup.exe
+OutFile honey-setup.exe
 InstallDir $PROGRAMFILES\Honey
 CRCCheck on
 XPStyle on
@@ -66,7 +66,7 @@ ShowUninstDetails show
 Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    #File ../release/honey-qt.exe
+    #File ../release/honey.exe
     File /oname=license.txt ../COPYING
     File /oname=readme.txt ../doc/README_windows.txt
     SetOutPath $INSTDIR\daemon
@@ -101,8 +101,8 @@ Section -post SEC0001
     # honey: URI handling disabled for 0.6.0
     #    WriteRegStr HKCR "honey" "URL Protocol" ""
     #    WriteRegStr HKCR "honey" "" "URL:Honey"
-    #    WriteRegStr HKCR "honey\DefaultIcon" "" $INSTDIR\honey-qt.exe
-    #    WriteRegStr HKCR "honey\shell\open\command" "" '"$INSTDIR\honey-qt.exe" "$$1"'
+    #    WriteRegStr HKCR "honey\DefaultIcon" "" $INSTDIR\honey.exe
+    #    WriteRegStr HKCR "honey\shell\open\command" "" '"$INSTDIR\honey.exe" "$$1"'
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -120,7 +120,7 @@ done${UNSECTION_ID}:
 
 # Uninstaller sections
 Section /o -un.Main UNSEC0000
-    #Delete /REBOOTOK $INSTDIR\honey-qt.exe
+    #Delete /REBOOTOK $INSTDIR\honey.exe
     Delete /REBOOTOK $INSTDIR\license.txt
     Delete /REBOOTOK $INSTDIR\readme.txt
     RMDir /r /REBOOTOK $INSTDIR\daemon

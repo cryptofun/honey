@@ -53,16 +53,9 @@ inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MO
 /** Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp. */
 static const unsigned int LOCKTIME_THRESHOLD = 500000000; // Tue Nov  5 00:53:20 1985 UTC
 /** FutureDrift parameters */
-inline int64_t FutureDrift(int64_t nTime, int nHeight) { return nTime + 60 * 60; }
+inline int64_t FutureDrift(int64_t nTime) { return nTime + 60 * 60 + 15; }
 /** Block target spacing defines */
-inline unsigned int GetTargetSpacing(int nHeight) {return (nHeight > 20000) ? 182 : 60; }  // increase block target at block height 20000
-
-/** DGWv3 Difficulty implementation softfork */
-static const int64_t nGravityFork = 21153;
-/** Honey 1.0 */
-inline bool IsHoneyV1(int nHeight) { return TestNet() || nHeight > 0; }
-/** Honey 2.0 */
-inline bool IsHoneyV2(int64_t nTime) { return TestNet() || nTime > 1507630210; }
+inline unsigned int GetTargetSpacing(int nHeight) {return 182; }
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
