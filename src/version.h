@@ -53,6 +53,6 @@ static const int BIP0031_VERSION = 60000;
 static const int MEMPOOL_GD_VERSION = 60000;
 
 // reject blocks with non-canonical signatures starting from this version
-//static const int CANONICAL_BLOCK_SIG_VERSION = 60013;
-//static const int CANONICAL_BLOCK_SIG_LOW_S_VERSION = 60015;
+static const int CANONICAL_BLOCK_SIG_VERSION = 60013;
+static const int CANONICAL_BLOCK_SIG_LOW_S_VERSION = 60015;
 #endif

@@ -98,8 +98,6 @@ LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
 win32:LIBS += -liphlpapi
 }
 
-
-USE_DBUS=0
 # use: qmake "USE_DBUS=1" or qmake "USE_DBUS=0"
 linux:count(USE_DBUS, 0) {
     USE_DBUS=1

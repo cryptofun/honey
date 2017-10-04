@@ -745,12 +745,10 @@ bool BackupWallet(const CWallet& wallet, const string& strDest)
                     pathDest /= wallet.strWalletFile;
 
                 try {
-#if BOOST_VERSION >= 158000
+#if BOOST_VERSION >= 104000
                     filesystem::copy_file(pathSrc, pathDest, filesystem::copy_option::overwrite_if_exists);
 #else
-                    std::ifstream  src(pathSrc.string(), std::ios::binary);
-                    std::ofstream  dst(pathDest.string(),   std::ios::binary);
-                    dst << src.rdbuf();
+                    filesystem::copy_file(pathSrc, pathDest);
 #endif
                     LogPrintf("copied wallet.dat to %s\n", pathDest.string());
                     return true;
