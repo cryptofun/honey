@@ -17,13 +17,6 @@
 #include <limits>
 #include <list>
 
-// Define difficulty retarget algorithms
-enum DiffMode {
-    DIFF_DEFAULT = 0, // Default to invalid 0
-    DIFF_PPC     = 1, // Retarget using Peercoin per-block
-    DIFF_DGW     = 2, // Retarget using DarkGravityWave v3
-};
-
 class CBlock;
 class CBlockIndex;
 class CInv;
@@ -140,8 +133,8 @@ void ThreadImport(std::vector<boost::filesystem::path> vImportFiles);
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits);
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake);
-int64_t GetProofOfWorkReward(int64_t nFees, int nHeight);
-int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees, int nHeight);
+int64_t GetProofOfWorkReward(int64_t nFees);
+int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees);
 bool IsInitialBlockDownload();
 bool IsConfirmedInNPrevBlocks(const CTxIndex& txindex, const CBlockIndex* pindexFrom, int nMaxDepth, int& nActualDepth);
 std::string GetWarnings(std::string strFor);

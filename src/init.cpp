@@ -14,7 +14,6 @@
 #ifdef ENABLE_WALLET
 #include "wallet.h"
 #include "walletdb.h"
-#include "miner.h"
 #endif
 
 #include <boost/filesystem.hpp>
@@ -109,7 +108,6 @@ void Shutdown()
 #ifdef ENABLE_WALLET
     if (pwalletMain)
         bitdb.Flush(true);
-    GenerateHoneys(false, NULL, 0);
 #endif
     boost::filesystem::remove(GetPidFile());
     UnregisterAllWallets();
@@ -164,7 +162,6 @@ std::string HelpMessage()
     strUsage += "  -?                     " + _("This help message") + "\n";
     strUsage += "  -conf=<file>           " + _("Specify configuration file (default: honey.conf)") + "\n";
     strUsage += "  -pid=<file>            " + _("Specify pid file (default: honeyd.pid)") + "\n";
-    strUsage += "  -gen " + _("Generate coins (default: 0)") + "\n";
     strUsage += "  -datadir=<dir>         " + _("Specify data directory") + "\n";
     strUsage += "  -wallet=<dir>          " + _("Specify wallet file (within data directory)") + "\n";
     strUsage += "  -dbcache=<n>           " + _("Set database cache size in megabytes (default: 25)") + "\n";
@@ -249,7 +246,6 @@ std::string HelpMessage()
     strUsage += "\n" + _("Block creation options:") + "\n";
     strUsage += "  -blockminsize=<n>      "   + _("Set minimum block size in bytes (default: 0)") + "\n";
     strUsage += "  -blockmaxsize=<n>      "   + _("Set maximum block size in bytes (default: 250000)") + "\n";
-    strUsage += "  -blockprioritysize=<n> "   + _("Set maximum size of high-priority/low-fee transactions in bytes (default: 27000)") + "\n";
 
     strUsage += "\n" + _("SSL options: (see the Bitcoin Wiki for SSL setup instructions)") + "\n";
     strUsage += "  -rpcssl                                  " + _("Use OpenSSL (https) for JSON-RPC connections") + "\n";
@@ -838,12 +834,6 @@ bool AppInit2(boost::thread_group& threadGroup)
         LogPrintf("Staking disabled\n");
     else if (pwalletMain)
         threadGroup.create_thread(boost::bind(&ThreadStakeMiner, pwalletMain));
-#endif
-
-#ifdef ENABLE_WALLET
-    // Generate coins in the background
-    if (pwalletMain)
-        GenerateHoneys(GetBoolArg("-gen", false), pwalletMain, GetArg("-genproclimit", -1));
 #endif
 
     // ********************************************************* Step 12: finished

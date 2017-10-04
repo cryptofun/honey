@@ -200,7 +200,7 @@ uint256 ComputeStakeModifierV2(const CBlockIndex* pindexPrev, const uint256& ker
 
     CDataStream ss(SER_GETHASH, 0);
     ss << kernel << pindexPrev->bnStakeModifierV2;
-    return Hash(ss.begin(), ss.end());
+    return HashBlake2s(ss.begin(), ss.end());
 }
 
 // The stake modifier used to hash for a stake kernel is chosen as the stake
@@ -348,7 +348,7 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
         return fDebug? error("CheckProofOfStake() : read block failed") : false; // unable to read block of previous transaction
 
     // Min age requirement
-    if (IsHoneyV2(tx.nTime))
+    if (true)
     {
         int nDepth;
         if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nStakeMinConfirmations - 1, nDepth))
@@ -356,9 +356,9 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
     }
     else
     {
-    int nDepth;
-    if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nCoinbaseMaturity - 1, nDepth))
-        return tx.DoS(100, error("CheckProofOfStake() : tried to stake at depth %d", nDepth + 1));
+        unsigned int nTimeBlockFrom = block.GetBlockTime();
+        if (nTimeBlockFrom + nStakeMinAge > tx.nTime)
+            return error("CheckProofOfStake() : min age violation");
     }
 
     if (!CheckStakeKernelHash(pindexPrev, nBits, block, txindex.pos.nTxPos - txindex.pos.nBlockPos, txPrev, txin.prevout, tx.nTime, hashProofOfStake, targetProofOfStake, fDebug))
@@ -370,7 +370,10 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
 // Check whether the coinstake timestamp meets protocol
 bool CheckCoinStakeTimestamp(int nHeight, int64_t nTimeBlock, int64_t nTimeTx)
 {
-    return (nTimeBlock == nTimeTx) && ((nTimeTx & STAKE_TIMESTAMP_MASK) == 0);
+    if (true)
+        return (nTimeBlock == nTimeTx) && ((nTimeTx & STAKE_TIMESTAMP_MASK) == 0);
+    else
+        return (nTimeBlock == nTimeTx);
 }
 
 bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, const COutPoint& prevout, int64_t* pBlockTime)
@@ -388,7 +391,7 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, con
     if (!block.ReadFromDisk(txindex.pos.nFile, txindex.pos.nBlockPos, false))
         return false;
 
-    if (IsHoneyV2(nTime))
+    if (true)
     {
         int nDepth;
         if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nStakeMinConfirmations - 1, nDepth))
@@ -396,9 +399,8 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, con
     }
     else
     {
-    int nDepth;
-    if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nCoinbaseMaturity - 1, nDepth))
-        return false;
+        if (block.GetBlockTime() + nStakeMinAge > nTime)
+            return false; // only count coins meeting min age requirement
     }
 
     if (pBlockTime)

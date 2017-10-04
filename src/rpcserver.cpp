@@ -225,7 +225,6 @@ static const CRPCCommand vRPCCommands[] =
     { "getconnectioncount",     &getconnectioncount,     true,      false,     false },
     { "getpeerinfo",            &getpeerinfo,            true,      false,     false },
     { "addnode",                &addnode,                true,      true,      false },
-    { "disconnectnode",         &disconnectnode,         true,      true,      false },
     { "getaddednodeinfo",       &getaddednodeinfo,       true,      true,      false },
     { "ping",                   &ping,                   true,      false,     false },
     { "getnettotals",           &getnettotals,           true,      true,      false },
@@ -247,8 +246,6 @@ static const CRPCCommand vRPCCommands[] =
     { "verifymessage",          &verifymessage,          false,     false,     false },
 
 #ifdef ENABLE_WALLET
-    { "getgenerate", 		&getgenerate, 		true, 	    false,	true },
-    { "setgenerate", 		&setgenerate, 		true, 	    false,	true },
     { "getmininginfo",          &getmininginfo,          true,      false,     false },
     { "getstakinginfo",         &getstakinginfo,         true,      false,     false },
     { "getnewaddress",          &getnewaddress,          true,      false,     true },

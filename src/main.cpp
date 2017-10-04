@@ -39,7 +39,6 @@ map<uint256, CBlockIndex*> mapBlockIndex;
 set<pair<COutPoint, unsigned int> > setStakeSeen;
 
 CBigNum bnProofOfStakeLimit(~uint256(0) >> 20);
-CBigNum bnProofOfStakeLimitV2(~uint256(0) >> 20);
 
 int nStakeMinConfirmations = 50;
 unsigned int nStakeMinAge = 1 * 60 * 60; // 1 hour
@@ -247,10 +246,10 @@ bool CTransaction::ReadFromDisk(CTxDB& txdb, const uint256& hash, CTxIndex& txin
     if (!ReadFromDisk(txindexRet.pos))
         return false;
     return true;
-    }
+}
 
 bool CTransaction::ReadFromDisk(CTxDB& txdb, COutPoint prevout, CTxIndex& txindexRet)
-    {
+{
     if (!ReadFromDisk(txdb, prevout.hash, txindexRet))
         return false;
     if (prevout.n >= vout.size())
@@ -350,7 +349,7 @@ bool IsStandardTx(const CTransaction& tx, string& reason)
         }
         if (whichType == TX_NULL_DATA)
             nDataOut++;
-        if (txout.nValue == 0) {
+        else if (txout.nValue == 0) {
             reason = "dust";
             return false;
         }
@@ -868,24 +867,6 @@ bool GetTransaction(const uint256 &hash, CTransaction &tx, uint256 &hashBlock)
                 hashBlock = block.GetHash();
             return true;
         }
-        // look for transaction in disconnected blocks to find orphaned CoinBase and CoinStake transactions
-        BOOST_FOREACH(PAIRTYPE(const uint256, CBlockIndex*)& item, mapBlockIndex)
-        {
-            CBlockIndex* pindex = item.second;
-            if (pindex == pindexBest || pindex->pnext != 0)
-                continue;
-            CBlock block;
-            if (!block.ReadFromDisk(pindex))
-                continue;
-            BOOST_FOREACH(const CTransaction& txOrphan, block.vtx)
-            {
-                if (txOrphan.GetHash() == hash)
-                {
-                    tx = txOrphan;
-                    return true;
-                }
-            }
-        }
     }
     return false;
 }
@@ -979,13 +960,13 @@ void static PruneOrphanBlocks()
     }
 }
 
-static CBigNum GetProofOfStakeLimit(int nHeight)
+static CBigNum GetProofOfStakeLimit()
 {
         return bnProofOfStakeLimit;
 }
 
 // miner's coin base reward
-int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
+int64_t GetProofOfWorkReward(int64_t nFees)
 {
     int64_t nSubsidy = 1 * COIN;
     LogPrint("creation", "GetProofOfWorkReward() : create=%s nSubsidy=%d nHeight=%d\n", FormatMoney(nSubsidy), nSubsidy, nHeight);
@@ -1002,7 +983,7 @@ int64_t GetProofOfWorkReward(int64_t nFees, int nHeight)
 }
 
 // miner's coin stake reward
-int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees, int nHeight)
+int64_t GetProofOfStakeReward(const CBlockIndex* pindexPrev, int64_t nCoinAge, int64_t nFees)
 {
     int64_t nSubsidy = 2 * COIN;
     LogPrint("creation", "GetProofOfStakeReward(): create=%s nCoinAge=%d nHeight=%d\n", FormatMoney(nSubsidy), nCoinAge, nHeight);
@@ -1026,43 +1007,6 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
     return pindex;
 }
 
-unsigned int PeercoinDiff(const CBlockIndex* pindexLast, bool fProofOfStake)
-{
-    CBigNum bnTargetLimit = fProofOfStake ? GetProofOfStakeLimit(pindexLast->nHeight) : Params().ProofOfWorkLimit();
-
-    if (pindexLast == NULL)
-        return bnTargetLimit.GetCompact(); // genesis block
-
-    const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
-    if (pindexPrev->pprev == NULL)
-        return bnTargetLimit.GetCompact(); // first block
-    const CBlockIndex* pindexPrevPrev = GetLastBlockIndex(pindexPrev->pprev, fProofOfStake);
-    if (pindexPrevPrev->pprev == NULL)
-        return bnTargetLimit.GetCompact(); // second block
-
-    int64_t nTargetSpacing = GetTargetSpacing(pindexLast->nHeight);
-    int64_t nActualSpacing = pindexPrev->GetBlockTime() - pindexPrevPrev->GetBlockTime();
-    if (nActualSpacing < 0)
-            nActualSpacing = nTargetSpacing;
-
-    if (nActualSpacing > nTargetSpacing * 10)
-            nActualSpacing = nTargetSpacing * 10;
-
-
-    // ppcoin: target change every block
-    // ppcoin: retarget with exponential moving toward target spacing
-    CBigNum bnNew;
-    bnNew.SetCompact(pindexPrev->nBits);
-    int64_t nInterval = nTargetTimespan / nTargetSpacing;
-    bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
-    bnNew /= ((nInterval + 1) * nTargetSpacing);
-
-    if (bnNew <= 0 || bnNew > bnTargetLimit)
-        bnNew = bnTargetLimit;
-
-    return bnNew.GetCompact();
-}
-
 unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
     // DarkGravityWave v3.1, written by Evan Duffield - evan@dashpay.io
@@ -1083,10 +1027,6 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
             if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMax) {
                 return nProofOfWorkLimit.GetCompact();
             }
-
-            // Honey chain jumpstart with dgw
-            if (BlockLastSolved->nHeight == nGravityFork)
-                return nProofOfWorkLimit.GetCompact();
 
             for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
                 if (PastBlocksMax > 0 && i > PastBlocksMax) { break; }
@@ -1128,27 +1068,8 @@ unsigned int DarkGravityWave(const CBlockIndex* pindexLast, bool fProofOfStake)
 
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake)
 {
-    // Initialize with DGW selected
-    unsigned int retarget = DIFF_DGW;
-
-    /* Chain starts with Peercoin per-block restarget,
-       PPC retarget difficulty runs for the initial blocks */
-    if(pindexBest->nHeight < nGravityFork)
-    {
-        retarget = DIFF_PPC;
-        // debug info for testing
-        // LogPrintf("PPC per-block retarget selected \n");
-    }
-    // Retarget using PPC
-    if (retarget == DIFF_PPC)
-    {
-        // debug info for testing
-        //LogPrintf("Honey retargetted using: PPC difficulty algo \n");
-        return PeercoinDiff(pindexLast, fProofOfStake);
-    }
     // Retarget using Dark Gravity Wave v3
     // debug info for testing
-    // LogPrintf("DarkGravityWave retarget selected \n");
     //LogPrintf("Honey retargetted using: DGW-v3 difficulty algo \n");
     return DarkGravityWave(pindexLast, fProofOfStake);
 }
@@ -1599,7 +1520,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
 
     if (IsProofOfWork())
     {
-        int64_t nReward = GetProofOfWorkReward(nFees, pindex->nHeight);
+        int64_t nReward = GetProofOfWorkReward(nFees);
         // Check coinbase reward
         if (vtx[0].GetValueOut() > nReward)
             return DoS(50, error("ConnectBlock() : coinbase reward exceeded (actual=%d vs calculated=%d)",
@@ -1613,7 +1534,7 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
         if (!vtx[1].GetCoinAge(txdb, pindex->pprev, nCoinAge))
             return error("ConnectBlock() : %s unable to get coin age for coinstake", vtx[1].GetHash().ToString());
 
-        int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees, pindex->nHeight);
+        int64_t nCalculatedStakeReward = GetProofOfStakeReward(pindex->pprev, nCoinAge, nFees);
 
         if (nStakeReward > nCalculatedStakeReward)
             return DoS(100, error("ConnectBlock() : coinstake pays too much(actual=%d vs calculated=%d)", nStakeReward, nCalculatedStakeReward));
@@ -1922,25 +1843,11 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, const CBlockIndex* pindexPrev, uint64
         if (nTime < txPrev.nTime)
             return false;  // Transaction timestamp violation
 
-        if (IsHoneyV2(nTime))
+        int nSpendDepth;
+        if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nStakeMinConfirmations - 1, nSpendDepth))
         {
-            int nSpendDepth;
-            if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nStakeMinConfirmations - 1, nSpendDepth))
-            {
-                LogPrint("coinage", "coin age skip nSpendDepth=%d\n", nSpendDepth + 1);
-                continue; // only count coins meeting min confirmations requirement
-            }
-        }
-        else
-        {
-            // Read block header
-            CBlock block;
-            int nSpendDepth;
-            if (IsConfirmedInNPrevBlocks(txindex, pindexPrev, nCoinbaseMaturity - 1, nSpendDepth))
-            {
             LogPrint("coinage", "coin age skip nSpendDepth=%d\n", nSpendDepth + 1);
-                continue; // only count coins meeting min age requirement
-            }
+            continue; // only count coins meeting min confirmations requirement
         }
 
         int64_t nValueIn = txPrev.vout[txin.prevout.n].nValue;
@@ -2041,7 +1948,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
         return DoS(50, error("CheckBlock() : proof of work failed"));
 
     // Check timestamp
-    if (GetBlockTime() > FutureDrift(GetAdjustedTime(), nBestHeight + 1))
+    if (GetBlockTime() > FutureDrift(GetAdjustedTime()))
         return error("CheckBlock() : block timestamp too far in the future");
 
     // First transaction must be coinbase, the rest must not be
@@ -2125,9 +2032,9 @@ bool CBlock::AcceptBlock()
     CBlockIndex* pindexPrev = (*mi).second;
     int nHeight = pindexPrev->nHeight+1;
 
-    if (IsHoneyV2(nHeight) && nVersion < 7)
+    if (nVersion < 7)
         return DoS(100, error("AcceptBlock() : reject too old nVersion = %d", nVersion));
-    else if (!IsHoneyV2(nHeight) && nVersion > 7)
+    else if (nVersion > 7)
         return DoS(100, error("AcceptBlock() : reject too new nVersion = %d", nVersion));
 
     if (IsProofOfWork() && nHeight > Params().LastPOWBlock())
@@ -3423,7 +3330,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
                     if (pingUsecTime > 0) {
                         // Successful ping time measurement, replace previous
                         pfrom->nPingUsecTime = pingUsecTime;
-                        pfrom->nMinPingUsecTime = std::min(pfrom->nMinPingUsecTime, pingUsecTime);
                     } else {
                         // This should never happen
                         sProblem = "Timing mishap";
