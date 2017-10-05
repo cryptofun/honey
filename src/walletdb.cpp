@@ -11,7 +11,6 @@
 #include "sync.h"
 #include "wallet.h"
 
-#include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 

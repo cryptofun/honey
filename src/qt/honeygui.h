@@ -70,7 +70,6 @@ private:
     AddressBookPage *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     SignVerifyMessageDialog *signVerifyMessageDialog;
-    BlockBrowser *blockBrowserPage;
 
 
     QLabel *labelEncryptionIcon;
@@ -113,8 +112,8 @@ private:
     QMovie *syncIconMovie;
     /** Keep track of previous number of blocks, to detect progress */
     int prevBlocks;
-
     uint64_t nWeight;
+    BlockBrowser *blockBrowserPage;
 
     /** Create the main UI actions. */
     void createActions();

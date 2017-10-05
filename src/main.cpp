@@ -960,11 +960,6 @@ void static PruneOrphanBlocks()
     }
 }
 
-static CBigNum GetProofOfStakeLimit()
-{
-        return bnProofOfStakeLimit;
-}
-
 // miner's coin base reward
 int64_t GetProofOfWorkReward(int64_t nFees)
 {
