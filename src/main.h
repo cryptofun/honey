@@ -644,12 +644,12 @@ public:
 
     uint256 GetHash() const
     {
-    return GetPoWHash();
+        return GetPoWHash();
     }
 
     uint256 GetPoWHash() const
     {
-	  return HashBlake2s(BEGIN(nVersion), END(nNonce));
+        return HashBlake2s(BEGIN(nVersion), END(nNonce));
     }
 
     int64_t GetBlockTime() const
