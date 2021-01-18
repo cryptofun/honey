@@ -11,6 +11,9 @@ src/build.h
 *.o
 *.patch
 .honey
+linearize.cfg
+bootstrap.dat
+hashlist.txt
 #compilation and Qt preprocessor part
 *.qm
 .qmake.stash
