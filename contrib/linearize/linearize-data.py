@@ -12,61 +12,56 @@ import struct
 import re
 import os
 import base64
-import httplib
+import http.client
 import sys
 import hashlib
 import datetime
 import time
-import ltc_scrypt
+from binascii import unhexlify
 
 settings = {}
 
 
 def uint32(x):
-	return x & 0xffffffffL
+	return x & 0xffffffff
+
 
 def bytereverse(x):
-	return uint32(( ((x) << 24) | (((x) << 8) & 0x00ff0000) |
-		       (((x) >> 8) & 0x0000ff00) | ((x) >> 24) ))
+	return uint32((((x) << 24) | (((x) << 8) & 0x00ff0000) |
+			   (((x) >> 8) & 0x0000ff00) | ((x) >> 24)))
+
 
 def bufreverse(in_buf):
 	out_words = []
 	for i in range(0, len(in_buf), 4):
 		word = struct.unpack('@I', in_buf[i:i+4])[0]
 		out_words.append(struct.pack('@I', bytereverse(word)))
-	return ''.join(out_words)
+	return b''.join(out_words)
+
 
 def wordreverse(in_buf):
 	out_words = []
 	for i in range(0, len(in_buf), 4):
 		out_words.append(in_buf[i:i+4])
 	out_words.reverse()
-	return ''.join(out_words)
+	return b''.join(out_words)
+
 
 def calc_hdr_hash(blk_hdr):
-	hash1 = hashlib.sha256()
+	hash1 = hashlib.blake2s()
 	hash1.update(blk_hdr)
 	hash1_o = hash1.digest()
 
-	hash2 = hashlib.sha256()
-	hash2.update(hash1_o)
-	hash2_o = hash2.digest()
+	return hash1_o
 
-	return hash2_o
 
 def calc_hash_str(blk_hdr):
 	hash = calc_hdr_hash(blk_hdr)
 	hash = bufreverse(hash)
 	hash = wordreverse(hash)
-	hash_str = hash.encode('hex')
+	hash_str = hash.hex()
 	return hash_str
 
-def calc_scrypt_hash_str(blk_hdr):
-	hash = ltc_scrypt.getPoWHash(blk_hdr)
-	hash = bufreverse(hash)
-	hash = wordreverse(hash)
-	hash_str = hash.encode('hex')
-	return hash_str
 
 def get_blk_dt(blk_hdr):
 	members = struct.unpack("<I", blk_hdr[68:68+4])
@@ -74,6 +69,7 @@ def get_blk_dt(blk_hdr):
 	dt = datetime.datetime.fromtimestamp(nTime)
 	dt_ym = datetime.datetime(dt.year, dt.month, 1)
 	return (dt_ym, nTime)
+
 
 def get_block_hashes(settings):
 	blkindex = []
@@ -86,11 +82,13 @@ def get_block_hashes(settings):
 
 	return blkindex
 
+
 def mkblockset(blkindex):
 	blkmap = {}
 	for hash in blkindex:
 		blkmap[hash] = True
 	return blkmap
+
 
 def copydata(settings, blkindex, blkset):
 	inFn = 1
@@ -121,7 +119,7 @@ def copydata(settings, blkindex, blkset):
 			try:
 				inF = open(fname, "rb")
 			except IOError:
-				print "Done"
+				print("Done")
 				return
 
 		inhdr = inF.read(8)
@@ -142,10 +140,7 @@ def copydata(settings, blkindex, blkset):
 		blk_hdr = rawblock[:80]
 
 		hash_str = 0
-		if blkCount > 319000:
-			hash_str = calc_hash_str(blk_hdr)
-		else:
-			hash_str = calc_scrypt_hash_str(blk_hdr)
+		hash_str = calc_hash_str(blk_hdr)
 
 		if not hash_str in blkset:
 			print("Skipping unknown block " + hash_str)
@@ -156,6 +151,7 @@ def copydata(settings, blkindex, blkset):
 			print("Expected " + blkindex[blkCount])
 			print("Got " + hash_str)
 			sys.exit(1)
+			# continue
 
 		if not fileOutput and ((outsz + inLen) > maxOutSz):
 			outF.close()
@@ -198,20 +194,21 @@ def copydata(settings, blkindex, blkset):
 		if (blkCount % 1000) == 0:
 			print("Wrote " + str(blkCount) + " blocks")
 
+
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
-		print "Usage: linearize-data.py CONFIG-FILE"
+		print("Usage: linearize-data.py CONFIG-FILE")
 		sys.exit(1)
 
-	f = open(sys.argv[1])
+	f = open(sys.argv[1], encoding="utf-8")
 	for line in f:
 		# skip comment lines
-		m = re.search('^\s*#', line)
+		m = re.search(r'^\s*#', line)
 		if m:
 			continue
 
 		# parse key=value lines
-		m = re.search('^(\w+)\s*=\s*(\S.*)$', line)
+		m = re.search(r'^(\w+)\s*=\s*(\S.*)$', line)
 		if m is None:
 			continue
 		settings[m.group(1)] = m.group(2)
@@ -228,12 +225,12 @@ if __name__ == '__main__':
 	if 'split_timestamp' not in settings:
 		settings['split_timestamp'] = 0
 	if 'max_out_sz' not in settings:
-		settings['max_out_sz'] = 1000L * 1000 * 1000
+		settings['max_out_sz'] = 1000 * 1000 * 1000
 
-	settings['max_out_sz'] = long(settings['max_out_sz'])
+	settings['max_out_sz'] = int(settings['max_out_sz'])
 	settings['split_timestamp'] = int(settings['split_timestamp'])
 	settings['file_timestamp'] = int(settings['file_timestamp'])
-	settings['netmagic'] = settings['netmagic'].decode('hex')
+	settings['netmagic'] = unhexlify(settings['netmagic'].encode('utf-8'))
 
 	if 'output_file' not in settings and 'output' not in settings:
 		print("Missing output file / directory")
@@ -242,7 +239,7 @@ if __name__ == '__main__':
 	blkindex = get_block_hashes(settings)
 	blkset = mkblockset(blkindex)
 
-	if not "000001faef25dec4fbcf906e6242621df2c183bf232f263d0ba5b101911e4563" in blkset:
+	if not "000000a70d759b452f04f26c30ab96b90d5b56e736c60e3551d1e00df1280549" in blkset:
 		print("not found")
 	else:
 		copydata(settings, blkindex, blkset)
