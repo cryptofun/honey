@@ -1,4 +1,4 @@
-from jsonrpc import ServiceProxy
+from jsonrpc.proxy import JSONRPCProxy
 import sys
 import string
 
@@ -10,315 +10,315 @@ rpcpass = ""
 
 
 if rpcpass == "":
-	access = ServiceProxy("http://127.0.0.1:8332")
+	access = JSONRPCProxy.from_url("http://127.0.0.1:8332")
 else:
-	access = ServiceProxy("http://"+rpcuser+":"+rpcpass+"@127.0.0.1:8332")
+	access = JSONRPCProxy.from_url("http://"+rpcuser+":"+rpcpass+"@127.0.0.1:8332")
 cmd = sys.argv[1].lower()
 
 if cmd == "backupwallet":
 	try:
-		path = raw_input("Enter destination path/filename: ")
-		print access.backupwallet(path)
+		path = input("Enter destination path/filename: ")
+		print(access.backupwallet(path))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getaccount":
 	try:
-		addr = raw_input("Enter a Honey address: ")
-		print access.getaccount(addr)
+		addr = input("Enter a Honey address: ")
+		print(access.getaccount(addr))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getaccountaddress":
 	try:
-		acct = raw_input("Enter an account name: ")
-		print access.getaccountaddress(acct)
+		acct = input("Enter an account name: ")
+		print(access.getaccountaddress(acct))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getaddressesbyaccount":
 	try:
-		acct = raw_input("Enter an account name: ")
-		print access.getaddressesbyaccount(acct)
+		acct = input("Enter an account name: ")
+		print(access.getaddressesbyaccount(acct))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getbalance":
 	try:
-		acct = raw_input("Enter an account (optional): ")
-		mc = raw_input("Minimum confirmations (optional): ")
+		acct = input("Enter an account (optional): ")
+		mc = input("Minimum confirmations (optional): ")
 		try:
-			print access.getbalance(acct, mc)
+			print(access.getbalance(acct, mc))
 		except:
-			print access.getbalance()
+			print(access.getbalance())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getblockbycount":
 	try:
-		height = raw_input("Height: ")
-		print access.getblockbycount(height)
+		height = input("Height: ")
+		print(access.getblockbycount(height))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getblockcount":
 	try:
-		print access.getblockcount()
+		print(access.getblockcount())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getblocknumber":
 	try:
-		print access.getblocknumber()
+		print(access.getblocknumber())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getconnectioncount":
 	try:
-		print access.getconnectioncount()
+		print(access.getconnectioncount())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getdifficulty":
 	try:
-		print access.getdifficulty()
+		print(access.getdifficulty())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getgenerate":
 	try:
-		print access.getgenerate()
+		print(access.getgenerate())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "gethashespersec":
 	try:
-		print access.gethashespersec()
+		print(access.gethashespersec())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getinfo":
 	try:
-		print access.getinfo()
+		print(access.getinfo())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getnewaddress":
 	try:
-		acct = raw_input("Enter an account name: ")
+		acct = input("Enter an account name: ")
 		try:
-			print access.getnewaddress(acct)
+			print(access.getnewaddress(acct))
 		except:
-			print access.getnewaddress()
+			print(access.getnewaddress())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getreceivedbyaccount":
 	try:
-		acct = raw_input("Enter an account (optional): ")
-		mc = raw_input("Minimum confirmations (optional): ")
+		acct = input("Enter an account (optional): ")
+		mc = input("Minimum confirmations (optional): ")
 		try:
-			print access.getreceivedbyaccount(acct, mc)
+			print(access.getreceivedbyaccount(acct, mc))
 		except:
-			print access.getreceivedbyaccount()
+			print(access.getreceivedbyaccount())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getreceivedbyaddress":
 	try:
-		addr = raw_input("Enter a Honey address (optional): ")
-		mc = raw_input("Minimum confirmations (optional): ")
+		addr = input("Enter a Honey address (optional): ")
+		mc = input("Minimum confirmations (optional): ")
 		try:
-			print access.getreceivedbyaddress(addr, mc)
+			print(access.getreceivedbyaddress(addr, mc))
 		except:
-			print access.getreceivedbyaddress()
+			print(access.getreceivedbyaddress())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "gettransaction":
 	try:
-		txid = raw_input("Enter a transaction ID: ")
-		print access.gettransaction(txid)
+		txid = input("Enter a transaction ID: ")
+		print(access.gettransaction(txid))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "getwork":
 	try:
-		data = raw_input("Data (optional): ")
+		data = input("Data (optional): ")
 		try:
-			print access.gettransaction(data)
+			print(access.gettransaction(data))
 		except:
-			print access.gettransaction()
+			print(access.gettransaction())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "help":
 	try:
-		cmd = raw_input("Command (optional): ")
+		cmd = input("Command (optional): ")
 		try:
-			print access.help(cmd)
+			print(access.help(cmd))
 		except:
-			print access.help()
+			print(access.help())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "listaccounts":
 	try:
-		mc = raw_input("Minimum confirmations (optional): ")
+		mc = input("Minimum confirmations (optional): ")
 		try:
-			print access.listaccounts(mc)
+			print(access.listaccounts(mc))
 		except:
-			print access.listaccounts()
+			print(access.listaccounts())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "listreceivedbyaccount":
 	try:
-		mc = raw_input("Minimum confirmations (optional): ")
-		incemp = raw_input("Include empty? (true/false, optional): ")
+		mc = input("Minimum confirmations (optional): ")
+		incemp = input("Include empty? (true/false, optional): ")
 		try:
-			print access.listreceivedbyaccount(mc, incemp)
+			print(access.listreceivedbyaccount(mc, incemp))
 		except:
-			print access.listreceivedbyaccount()
+			print(access.listreceivedbyaccount())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "listreceivedbyaddress":
 	try:
-		mc = raw_input("Minimum confirmations (optional): ")
-		incemp = raw_input("Include empty? (true/false, optional): ")
+		mc = input("Minimum confirmations (optional): ")
+		incemp = input("Include empty? (true/false, optional): ")
 		try:
-			print access.listreceivedbyaddress(mc, incemp)
+			print(access.listreceivedbyaddress(mc, incemp))
 		except:
-			print access.listreceivedbyaddress()
+			print(access.listreceivedbyaddress())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "listtransactions":
 	try:
-		acct = raw_input("Account (optional): ")
-		count = raw_input("Number of transactions (optional): ")
-		frm = raw_input("Skip (optional):")
+		acct = input("Account (optional): ")
+		count = input("Number of transactions (optional): ")
+		frm = input("Skip (optional):")
 		try:
-			print access.listtransactions(acct, count, frm)
+			print(access.listtransactions(acct, count, frm))
 		except:
-			print access.listtransactions()
+			print(access.listtransactions())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "move":
 	try:
-		frm = raw_input("From: ")
-		to = raw_input("To: ")
-		amt = raw_input("Amount:")
-		mc = raw_input("Minimum confirmations (optional): ")
-		comment = raw_input("Comment (optional): ")
+		frm = input("From: ")
+		to = input("To: ")
+		amt = input("Amount:")
+		mc = input("Minimum confirmations (optional): ")
+		comment = input("Comment (optional): ")
 		try:
-			print access.move(frm, to, amt, mc, comment)
+			print(access.move(frm, to, amt, mc, comment))
 		except:
-			print access.move(frm, to, amt)
+			print(access.move(frm, to, amt))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "sendfrom":
 	try:
-		frm = raw_input("From: ")
-		to = raw_input("To: ")
-		amt = raw_input("Amount:")
-		mc = raw_input("Minimum confirmations (optional): ")
-		comment = raw_input("Comment (optional): ")
-		commentto = raw_input("Comment-to (optional): ")
+		frm = input("From: ")
+		to = input("To: ")
+		amt = input("Amount:")
+		mc = input("Minimum confirmations (optional): ")
+		comment = input("Comment (optional): ")
+		commentto = input("Comment-to (optional): ")
 		try:
-			print access.sendfrom(frm, to, amt, mc, comment, commentto)
+			print(access.sendfrom(frm, to, amt, mc, comment, commentto))
 		except:
-			print access.sendfrom(frm, to, amt)
+			print(access.sendfrom(frm, to, amt))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "sendmany":
 	try:
-		frm = raw_input("From: ")
-		to = raw_input("To (in format address1:amount1,address2:amount2,...): ")
-		mc = raw_input("Minimum confirmations (optional): ")
-		comment = raw_input("Comment (optional): ")
+		frm = input("From: ")
+		to = input("To (in format address1:amount1,address2:amount2,...): ")
+		mc = input("Minimum confirmations (optional): ")
+		comment = input("Comment (optional): ")
 		try:
-			print access.sendmany(frm,to,mc,comment)
+			print(access.sendmany(frm,to,mc,comment))
 		except:
-			print access.sendmany(frm,to)
+			print(access.sendmany(frm,to))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "sendtoaddress":
 	try:
-		to = raw_input("To (in format address1:amount1,address2:amount2,...): ")
-		amt = raw_input("Amount:")
-		comment = raw_input("Comment (optional): ")
-		commentto = raw_input("Comment-to (optional): ")
+		to = input("To (in format address1:amount1,address2:amount2,...): ")
+		amt = input("Amount:")
+		comment = input("Comment (optional): ")
+		commentto = input("Comment-to (optional): ")
 		try:
-			print access.sendtoaddress(to,amt,comment,commentto)
+			print(access.sendtoaddress(to,amt,comment,commentto))
 		except:
-			print access.sendtoaddress(to,amt)
+			print(access.sendtoaddress(to,amt))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "setaccount":
 	try:
-		addr = raw_input("Address: ")
-		acct = raw_input("Account:")
-		print access.setaccount(addr,acct)
+		addr = input("Address: ")
+		acct = input("Account:")
+		print(access.setaccount(addr,acct))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "setgenerate":
 	try:
-		gen= raw_input("Generate? (true/false): ")
-		cpus = raw_input("Max processors/cores (-1 for unlimited, optional):")
+		gen= input("Generate? (true/false): ")
+		cpus = input("Max processors/cores (-1 for unlimited, optional):")
 		try:
-			print access.setgenerate(gen, cpus)
+			print(access.setgenerate(gen, cpus))
 		except:
-			print access.setgenerate(gen)
+			print(access.setgenerate(gen))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "settxfee":
 	try:
-		amt = raw_input("Amount:")
-		print access.settxfee(amt)
+		amt = input("Amount:")
+		print(access.settxfee(amt))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "stop":
 	try:
-		print access.stop()
+		print(access.stop())
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "validateaddress":
 	try:
-		addr = raw_input("Address: ")
-		print access.validateaddress(addr)
+		addr = input("Address: ")
+		print(access.validateaddress(addr))
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "walletpassphrase":
 	try:
-		pwd = raw_input("Enter wallet passphrase: ")
+		pwd = input("Enter wallet passphrase: ")
 		access.walletpassphrase(pwd, 60)
-		print "\n---Wallet unlocked---\n"
+		print("\n---Wallet unlocked---\n")
 	except:
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 
 elif cmd == "walletpassphrasechange":
 	try:
-		pwd = raw_input("Enter old wallet passphrase: ")
-		pwd2 = raw_input("Enter new wallet passphrase: ")
+		pwd = input("Enter old wallet passphrase: ")
+		pwd2 = input("Enter new wallet passphrase: ")
 		access.walletpassphrasechange(pwd, pwd2)
 		print
-		print "\n---Passphrase changed---\n"
+		print("\n---Passphrase changed---\n")
 	except:
 		print
-		print "\n---An error occurred---\n"
+		print("\n---An error occurred---\n")
 		print
 
 else:
-	print "Command not found or not supported"
+	print("Command not found or not supported")
