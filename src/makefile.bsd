@@ -31,7 +31,8 @@ LIBS += \
    -l db_cxx$(BDB_LIB_SUFFIX) \
    -l ssl \
    -l crypto \
-   -l execinfo
+   -l execinfo \
+   -l boost_chrono$(BOOST_LIB_SUFFIX)
 
 ifndef USE_UPNP
 	override USE_UPNP = -
@@ -127,7 +128,8 @@ OBJS= \
     obj/scrypt-arm.o \
     obj/scrypt-x86.o \
     obj/scrypt-x86_64.o \
-    obj/chainparams.o
+    obj/chainparams.o \
+    obj/blake2s-ref.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET

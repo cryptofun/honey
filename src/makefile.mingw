@@ -80,7 +80,8 @@ OBJS= \
     obj/scrypt.o \
     obj/scrypt-x86.o \
     obj/scrypt-x86_64.o \
-    obj/chainparams.o
+    obj/chainparams.o \
+    obj/blake2s-ref.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET
