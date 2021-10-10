@@ -6,7 +6,6 @@
 #ifndef HONEY_CHAIN_PARAMS_H
 #define HONEY_CHAIN_PARAMS_H
 
-#include "bignum.h"
 #include "uint256.h"
 #include "util.h"
 
@@ -56,7 +55,7 @@ public:
     const uint256& HashGenesisBlock() const { return hashGenesisBlock; }
     const MessageStartChars& MessageStart() const { return pchMessageStart; }
     int GetDefaultPort() const { return nDefaultPort; }
-    const CBigNum& ProofOfWorkLimit() const { return bnProofOfWorkLimit; }
+    const uint256& ProofOfWorkLimit() const { return bnProofOfWorkLimit; }
     int SubsidyHalvingInterval() const { return nSubsidyHalvingInterval; }
     virtual const CBlock& GenesisBlock() const = 0;
     virtual bool RequireRPCPassword() const { return true; }
@@ -74,7 +73,7 @@ protected:
     MessageStartChars pchMessageStart;
     int nDefaultPort;
     int nRPCPort;
-    CBigNum bnProofOfWorkLimit;
+    uint256 bnProofOfWorkLimit;
     int nSubsidyHalvingInterval;
     string strDataDir;
     vector<CDNSSeedData> vSeeds;

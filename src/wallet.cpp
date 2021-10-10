@@ -5,6 +5,7 @@
 
 #include "wallet.h"
 
+#include "arith_uint256.h"
 #include "base58.h"
 #include "coincontrol.h"
 #include "kernel.h"
@@ -1564,7 +1565,7 @@ uint64_t CWallet::GetStakeWeight() const
 bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, int64_t nFees, CTransaction& txNew, CKey& key)
 {
     CBlockIndex* pindexPrev = pindexBest;
-    CBigNum bnTargetPerCoinDay;
+    arith_uint256 bnTargetPerCoinDay;
     bnTargetPerCoinDay.SetCompact(nBits);
 
     txNew.vin.clear();

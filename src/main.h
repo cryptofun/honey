@@ -6,13 +6,13 @@
 #define HONEY_MAIN_H
 
 #include "core.h"
-#include "bignum.h"
 #include "sync.h"
 #include "txmempool.h"
 #include "net.h"
 #include "script.h"
 #include "scrypt.h"
 #include "hash.h"
+#include "uint256.h"
 
 #include <limits>
 #include <list>

@@ -54,7 +54,7 @@ public:
         pchMessageStart[3] = 0x4e;
         nDefaultPort = 40638;
         nRPCPort = 40639;
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 20);
+        bnProofOfWorkLimit = ~uint256(0) >> 20;
 
         // Build the genesis block. Note that the output of the genesis coinbase cannot
         // be spent as it did not originally exist in the database.
@@ -129,7 +129,7 @@ public:
         pchMessageStart[1] = 0x1a;
         pchMessageStart[2] = 0x09;
         pchMessageStart[3] = 0x3b;
-        bnProofOfWorkLimit = CBigNum(~uint256(0) >> 8);
+        bnProofOfWorkLimit = ~uint256(0) >> 8;
         nDefaultPort = 17799;
         nRPCPort = 19977;
         strDataDir = "testnet";
