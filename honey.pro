@@ -282,6 +282,7 @@ SOURCES += src/qt/honey.cpp src/qt/honeygui.cpp \
     src/net.cpp \
     src/checkpoints.cpp \
     src/addrman.cpp \
+    src/base58.cpp \
     src/db.cpp \
     src/walletdb.cpp \
     src/qt/clientmodel.cpp \
