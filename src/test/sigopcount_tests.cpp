@@ -5,7 +5,6 @@
 #include "script.h"
 #include "key.h"
 
-using namespace std;
 
 // Helpers:
 static std::vector<unsigned char>

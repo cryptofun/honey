@@ -5,7 +5,6 @@
 
 #include "serialize.h"
 
-using namespace std;
 
 BOOST_AUTO_TEST_SUITE(serialize_tests)
 

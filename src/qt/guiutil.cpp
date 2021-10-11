@@ -359,13 +359,11 @@ bool SetStartOnSystemStartup(bool fAutoStart)
 
 boost::filesystem::path static GetAutostartDir()
 {
-    namespace fs = boost::filesystem;
-
     char* pszConfigHome = getenv("XDG_CONFIG_HOME");
-    if (pszConfigHome) return fs::path(pszConfigHome) / "autostart";
+    if (pszConfigHome) return boost::filesystem::path(pszConfigHome) / "autostart";
     char* pszHome = getenv("HOME");
-    if (pszHome) return fs::path(pszHome) / ".config" / "autostart";
-    return fs::path();
+    if (pszHome) return boost::filesystem::path(pszHome) / ".config" / "autostart";
+    return boost::filesystem::path();
 }
 
 boost::filesystem::path static GetAutostartFilePath()

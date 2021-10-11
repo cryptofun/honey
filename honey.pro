@@ -4,15 +4,10 @@ VERSION = 2.0.1.1
 INCLUDEPATH += src src/json src/qt
 QT += core gui widgets network
 DEFINES += ENABLE_WALLET
-DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE BOOST_NO_CXX11_SCOPED_ENUMS
+DEFINES += QT_GUI BOOST_THREAD_USE_LIB
 CONFIG += no_include_pwd
 CONFIG += thread
-CONFIG += widgets
 CONFIG += static
-
-QMAKE_LFLAGS += -no-pie
-QMAKE_CFLAGS += -std=c99
-QMAKE_CXXFLAGS += -fpermissive -std=gnu++11
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets

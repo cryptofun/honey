@@ -11,8 +11,6 @@
 
 #include <boost/assign/list_of.hpp>
 
-using namespace boost::assign;
-
 struct SeedSpec6 {
     uint8_t addr[16];
     uint16_t port;
@@ -68,7 +66,7 @@ public:
         const char* pszTimestamp = "Locally-sourced Honey Could Help with Allergies - 2017"; // Sat, 11 Mar 2017 01:28:10 GMT
         std::vector<CTxIn> vin;
         vin.resize(1);
-        vin[0].scriptSig = CScript() << 0 << CScriptNum(42) << vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+        vin[0].scriptSig = CScript() << 0 << CScriptNum(42) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
         std::vector<CTxOut> vout;
         vout.resize(1);
         vout[0].SetEmpty();
@@ -105,12 +103,12 @@ public:
     virtual const CBlock& GenesisBlock() const { return genesis; }
     virtual Network NetworkID() const { return CChainParams::MAIN; }
 
-    virtual const vector<CAddress>& FixedSeeds() const {
+    virtual const std::vector<CAddress>& FixedSeeds() const {
         return vFixedSeeds;
     }
 protected:
     CBlock genesis;
-    vector<CAddress> vFixedSeeds;
+    std::vector<CAddress> vFixedSeeds;
 };
 static CMainParams mainParams;
 

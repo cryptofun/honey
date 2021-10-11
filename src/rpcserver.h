@@ -12,6 +12,8 @@
 #include <list>
 #include <map>
 
+#include <boost/assign/list_of.hpp>
+
 class CBlockIndex;
 
 void StartRPCThreads();

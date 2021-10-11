@@ -24,6 +24,8 @@
 #include "allocators.h"
 #include "util.h"
 
+#include <boost/variant.hpp>
+
 // Encode a byte sequence as a base58-encoded string
 std::string EncodeBase58(const unsigned char* pbegin, const unsigned char* pend);
 

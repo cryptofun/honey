@@ -17,6 +17,8 @@
 #include <limits>
 #include <list>
 
+#include <boost/filesystem.hpp>
+
 class CBlock;
 class CBlockIndex;
 class CInv;

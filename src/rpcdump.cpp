@@ -14,42 +14,38 @@
 #include <boost/variant/get.hpp>
 #include <boost/algorithm/string.hpp>
 
-using namespace json_spirit;
-using namespace std;
 
 void EnsureWalletIsUnlocked();
-
-namespace bt = boost::posix_time;
 
 // Extended DecodeDumpTime implementation, see this page for details:
 // http://stackoverflow.com/questions/3786201/parsing-of-date-time-from-string-boost
 const std::locale formats[] = {
-    std::locale(std::locale::classic(),new bt::time_input_facet("%Y-%m-%dT%H:%M:%SZ")),
-    std::locale(std::locale::classic(),new bt::time_input_facet("%Y-%m-%d %H:%M:%S")),
-    std::locale(std::locale::classic(),new bt::time_input_facet("%Y/%m/%d %H:%M:%S")),
-    std::locale(std::locale::classic(),new bt::time_input_facet("%d.%m.%Y %H:%M:%S")),
-    std::locale(std::locale::classic(),new bt::time_input_facet("%Y-%m-%d"))
+    std::locale(std::locale::classic(),new boost::posix_time::time_input_facet("%Y-%m-%dT%H:%M:%SZ")),
+    std::locale(std::locale::classic(),new boost::posix_time::time_input_facet("%Y-%m-%d %H:%M:%S")),
+    std::locale(std::locale::classic(),new boost::posix_time::time_input_facet("%Y/%m/%d %H:%M:%S")),
+    std::locale(std::locale::classic(),new boost::posix_time::time_input_facet("%d.%m.%Y %H:%M:%S")),
+    std::locale(std::locale::classic(),new boost::posix_time::time_input_facet("%Y-%m-%d"))
 };
 
 const size_t formats_n = sizeof(formats)/sizeof(formats[0]);
 
-std::time_t pt_to_time_t(const bt::ptime& pt)
+std::time_t pt_to_time_t(const boost::posix_time::ptime& pt)
 {
-    bt::ptime timet_start(boost::gregorian::date(1970,1,1));
-    bt::time_duration diff = pt - timet_start;
-    return diff.ticks()/bt::time_duration::rep_type::ticks_per_second;
+    boost::posix_time::ptime timet_start(boost::gregorian::date(1970,1,1));
+    boost::posix_time::time_duration diff = pt - timet_start;
+    return diff.ticks()/boost::posix_time::time_duration::rep_type::ticks_per_second;
 }
 
 int64_t DecodeDumpTime(const std::string& s)
 {
-    bt::ptime pt;
+    boost::posix_time::ptime pt;
 
     for(size_t i=0; i<formats_n; ++i)
     {
         std::istringstream is(s);
         is.imbue(formats[i]);
         is >> pt;
-        if(pt != bt::ptime()) break;
+        if(pt != boost::posix_time::ptime()) break;
     }
 
     return pt_to_time_t(pt);
@@ -76,7 +72,7 @@ std::string DecodeDumpString(const std::string &str) {
     for (unsigned int pos = 0; pos < str.length(); pos++) {
         unsigned char c = str[pos];
         if (c == '%' && pos+2 < str.length()) {
-            c = (((str[pos+1]>>6)*9+((str[pos+1]-'0')&15)) << 4) | 
+            c = (((str[pos+1]>>6)*9+((str[pos+1]-'0')&15)) << 4) |
                 ((str[pos+2]>>6)*9+((str[pos+2]-'0')&15));
             pos += 2;
         }
@@ -103,15 +99,15 @@ public:
     }
 };
 
-Value importprivkey(const Array& params, bool fHelp)
+json_spirit::Value importprivkey(const json_spirit::Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 3)
-        throw runtime_error(
+        throw std::runtime_error(
             "importprivkey <honeyprivkey> [label] [rescan=true]\n"
             "Adds a private key (as returned by dumpprivkey) to your wallet.");
 
-    string strSecret = params[0].get_str();
-    string strLabel = "";
+    std::string strSecret = params[0].get_str();
+    std::string strLabel = "";
     if (params.size() > 1)
         strLabel = params[1].get_str();
 
@@ -138,7 +134,7 @@ Value importprivkey(const Array& params, bool fHelp)
 
         // Don't throw error in case a key is already there
         if (pwalletMain->HaveKey(vchAddress))
-            return Value::null;
+            return json_spirit::Value::null;
 
         pwalletMain->mapKeyMetadata[vchAddress].nCreateTime = 1;
 
@@ -154,19 +150,19 @@ Value importprivkey(const Array& params, bool fHelp)
         }
     }
 
-    return Value::null;
+    return json_spirit::Value::null;
 }
 
-Value importwallet(const Array& params, bool fHelp)
+json_spirit::Value importwallet(const json_spirit::Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "importwallet <filename>\n"
             "Imports keys from a wallet dump file (see dumpwallet).");
 
     EnsureWalletIsUnlocked();
 
-    ifstream file;
+    std::ifstream file;
     file.open(params[0].get_str().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
@@ -237,20 +233,20 @@ Value importwallet(const Array& params, bool fHelp)
     if (!fGood)
         throw JSONRPCError(RPC_WALLET_ERROR, "Error adding some keys to wallet");
 
-    return Value::null;
+    return json_spirit::Value::null;
 }
 
 
-Value dumpprivkey(const Array& params, bool fHelp)
+json_spirit::Value dumpprivkey(const json_spirit::Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "dumpprivkey <honeyaddress>\n"
             "Reveals the private key corresponding to <honeyaddress>.");
 
     EnsureWalletIsUnlocked();
 
-    string strAddress = params[0].get_str();
+    std::string strAddress = params[0].get_str();
     CHoneyAddress address;
     if (!address.SetString(strAddress))
         throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Invalid Honey address");
@@ -265,16 +261,16 @@ Value dumpprivkey(const Array& params, bool fHelp)
     return CHoneySecret(vchSecret).ToString();
 }
 
-Value dumpwallet(const Array& params, bool fHelp)
+json_spirit::Value dumpwallet(const json_spirit::Array& params, bool fHelp)
 {
     if (fHelp || params.size() != 1)
-        throw runtime_error(
+        throw std::runtime_error(
             "dumpwallet <filename>\n"
             "Dumps all wallet keys in a human-readable format.");
 
     EnsureWalletIsUnlocked();
 
-    ofstream file;
+    std::ofstream file;
     file.open(params[0].get_str().c_str());
     if (!file.is_open())
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Cannot open wallet dump file");
@@ -320,5 +316,5 @@ Value dumpwallet(const Array& params, bool fHelp)
     file << "\n";
     file << "# End of dump\n";
     file.close();
-    return Value::null;
+    return json_spirit::Value::null;
 }

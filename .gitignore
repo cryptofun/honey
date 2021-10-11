@@ -27,5 +27,7 @@ qrc_*.cpp
 #mac specific
 .DS_Store
 build
+# vscode
+.vscode
 
 !src/leveldb/Makefile

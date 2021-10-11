@@ -9,7 +9,6 @@
 double GetDifficulty(const CBlockIndex* blockindex);
 
 
-using namespace std;
 
 const CBlockIndex* getBlockIndex(qint64 height)
 {
@@ -209,7 +208,7 @@ double BlockBrowser::getTxFees(std::string txid)
         return convertCoins(MIN_TX_FEE);
 
     MapPrevTx mapInputs;
-    map<uint256, CTxIndex> mapUnused;
+    std::map<uint256, CTxIndex> mapUnused;
 	bool fInvalid;
 
     if (!tx.FetchInputs(txdb, mapUnused, false, false, mapInputs, fInvalid))

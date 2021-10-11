@@ -20,7 +20,6 @@
 #include <QStringList>
 #include <QUrl>
 
-using namespace boost;
 
 const int HONEY_IPC_CONNECT_TIMEOUT = 1000; // milliseconds
 const QString HONEY_IPC_PREFIX("honey:");

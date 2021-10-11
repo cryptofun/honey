@@ -16,31 +16,25 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
-#include <boost/bind.hpp>
-#include <boost/filesystem.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/iostreams/concepts.hpp>
 #include <boost/iostreams/stream.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
+
 #include "json/json_spirit_writer_template.h"
 
-using namespace std;
-using namespace boost;
-using namespace boost::asio;
-using namespace json_spirit;
 
-Object CallRPC(const string& strMethod, const Array& params)
+json_spirit::Object CallRPC(const std::string& strMethod, const json_spirit::Array& params)
 {
 
     // Connect to localhost
     bool fUseSSL = GetBoolArg("-rpcssl", false);
-    asio::io_service io_service;
-    ssl::context context(ssl::context::sslv23);
-    context.set_options(ssl::context::no_sslv2);
-    asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
-    SSLIOStreamDevice<asio::ip::tcp> d(sslStream, fUseSSL);
-    iostreams::stream< SSLIOStreamDevice<asio::ip::tcp> > stream(d);
+    boost::asio::io_service io_service;
+    boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
+    context.set_options(boost::asio::ssl::context::no_sslv2);
+    boost::asio::ssl::stream<boost::asio::ip::tcp::socket> sslStream(io_service, context);
+    SSLIOStreamDevice<boost::asio::ip::tcp> d(sslStream, fUseSSL);
+    boost::iostreams::stream< SSLIOStreamDevice<boost::asio::ip::tcp> > stream(d);
 
     bool fWait = GetBoolArg("-rpcwait", false); // -rpcwait means try until server has started
     do {
@@ -49,7 +43,7 @@ Object CallRPC(const string& strMethod, const Array& params)
         if (fWait)
             MilliSleep(1000);
         else
-            throw runtime_error("couldn't connect to server");
+            throw std::runtime_error("couldn't connect to server");
     } while (fWait);
 
     // Find credentials to use
@@ -57,7 +51,7 @@ Object CallRPC(const string& strMethod, const Array& params)
      if (mapArgs["-rpcpassword"] == "") {
          // Try fall back to cookie-based authentication if no password is provided
          if (!GetAuthCookie(&strRPCUserColonPass)) {
-             throw runtime_error(strprintf(
+             throw std::runtime_error(strprintf(
                  _("You must set rpcpassword=<password> in the configuration file:\n%s\n"
                    "If the file does not exist, create it with owner-readable-only file permissions."),
                      GetConfigFile().string().c_str()));
@@ -68,12 +62,12 @@ Object CallRPC(const string& strMethod, const Array& params)
      }
 
     // HTTP basic authentication
-    map<string, string> mapRequestHeaders;
-    mapRequestHeaders["Authorization"] = string("Basic ") + EncodeBase64(strRPCUserColonPass);
+    std::map<std::string, std::string> mapRequestHeaders;
+    mapRequestHeaders["Authorization"] = std::string("Basic ") + EncodeBase64(strRPCUserColonPass);
 
     // Send request
-    string strRequest = JSONRPCRequest(strMethod, params, 1);
-    string strPost = HTTPPost(strRequest, mapRequestHeaders);
+    std::string strRequest = JSONRPCRequest(strMethod, params, 1);
+    std::string strPost = HTTPPost(strRequest, mapRequestHeaders);
     stream << strPost << std::flush;
 
     // Receive HTTP reply status
@@ -81,24 +75,24 @@ Object CallRPC(const string& strMethod, const Array& params)
     int nStatus = ReadHTTPStatus(stream, nProto);
 
     // Receive HTTP reply message headers and body
-    map<string, string> mapHeaders;
-    string strReply;
+    std::map<std::string, std::string> mapHeaders;
+    std::string strReply;
     ReadHTTPMessage(stream, mapHeaders, strReply, nProto);
 
     if (nStatus == HTTP_UNAUTHORIZED)
-        throw runtime_error("incorrect rpcuser or rpcpassword (authorization failed)");
+        throw std::runtime_error("incorrect rpcuser or rpcpassword (authorization failed)");
     else if (nStatus >= 400 && nStatus != HTTP_BAD_REQUEST && nStatus != HTTP_NOT_FOUND && nStatus != HTTP_INTERNAL_SERVER_ERROR)
-        throw runtime_error(strprintf("server returned HTTP error %d", nStatus));
+        throw std::runtime_error(strprintf("server returned HTTP error %d", nStatus));
     else if (strReply.empty())
-        throw runtime_error("no response from server");
+        throw std::runtime_error("no response from server");
 
     // Parse reply
-    Value valReply;
-    if (!read_string(strReply, valReply))
-        throw runtime_error("couldn't parse reply from server");
-    const Object& reply = valReply.get_obj();
+    json_spirit::Value valReply;
+    if (!json_spirit::read_string(strReply, valReply))
+        throw std::runtime_error("couldn't parse reply from server");
+    const json_spirit::Object& reply = valReply.get_obj();
     if (reply.empty())
-        throw runtime_error("expected reply to have result, error and id properties");
+        throw std::runtime_error("expected reply to have result, error and id properties");
 
     return reply;
 }
@@ -186,9 +180,9 @@ CRPCConvertTable::CRPCConvertTable()
 static CRPCConvertTable rpcCvtTable;
 
 // Convert strings to command-specific RPC representation
-Array RPCConvertValues(const std::string &strMethod, const std::vector<std::string> &strParams)
+json_spirit::Array RPCConvertValues(const std::string &strMethod, const std::vector<std::string> &strParams)
 {
-    Array params;
+    json_spirit::Array params;
 
     for (unsigned int idx = 0; idx < strParams.size(); idx++) {
         const std::string& strVal = strParams[idx];
@@ -200,9 +194,9 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
 
         // parse string as JSON, insert bool/number/object/etc. value
         else {
-            Value jVal;
-            if (!read_string(strVal, jVal))
-                throw runtime_error(string("Error parsing JSON:")+strVal);
+            json_spirit::Value jVal;
+            if (!json_spirit::read_string(strVal, jVal))
+                throw std::runtime_error(std::string("Error parsing JSON:")+strVal);
             params.push_back(jVal);
         }
 
@@ -213,7 +207,7 @@ Array RPCConvertValues(const std::string &strMethod, const std::vector<std::stri
 
 int CommandLineRPC(int argc, char *argv[])
 {
-    string strPrint;
+    std::string strPrint;
     int nRet = 0;
     try
     {
@@ -226,43 +220,43 @@ int CommandLineRPC(int argc, char *argv[])
 
         // Method
         if (argc < 2)
-            throw runtime_error("too few parameters");
-        string strMethod = argv[1];
+            throw std::runtime_error("too few parameters");
+        std::string strMethod = argv[1];
 
         // Parameters default to strings
         std::vector<std::string> strParams(&argv[2], &argv[argc]);
-        Array params = RPCConvertValues(strMethod, strParams);
+        json_spirit::Array params = RPCConvertValues(strMethod, strParams);
 
         // Execute
-        Object reply = CallRPC(strMethod, params);
+        json_spirit::Object reply = CallRPC(strMethod, params);
 
         // Parse reply
-        const Value& result = find_value(reply, "result");
-        const Value& error  = find_value(reply, "error");
+        const json_spirit::Value& result = json_spirit::find_value(reply, "result");
+        const json_spirit::Value& error  = json_spirit::find_value(reply, "error");
 
-        if (error.type() != null_type)
+        if (error.type() != json_spirit::null_type)
         {
             // Error
-            strPrint = "error: " + write_string(error, false);
-            int code = find_value(error.get_obj(), "code").get_int();
+            strPrint = "error: " + json_spirit::write_string(error, false);
+            int code = json_spirit::find_value(error.get_obj(), "code").get_int();
             nRet = abs(code);
         }
         else
         {
             // Result
-            if (result.type() == null_type)
+            if (result.type() == json_spirit::null_type)
                 strPrint = "";
-            else if (result.type() == str_type)
+            else if (result.type() == json_spirit::str_type)
                 strPrint = result.get_str();
             else
-                strPrint = write_string(result, true);
+                strPrint = json_spirit::write_string(result, true);
         }
     }
     catch (boost::thread_interrupted) {
         throw;
     }
     catch (std::exception& e) {
-        strPrint = string("error: ") + e.what();
+        strPrint = std::string("error: ") + e.what();
         nRet = 87;
     }
     catch (...) {

@@ -3,7 +3,6 @@
 #include "hash.h"
 #include "util.h"
 
-using namespace std;
 
 BOOST_AUTO_TEST_SUITE(hmac_tests)
 
@@ -107,9 +106,9 @@ BOOST_AUTO_TEST_CASE(hmacsha512_testvectors)
 {
     for (unsigned int n=0; n<sizeof(vtest)/sizeof(vtest[0]); n++)
     {
-        vector<unsigned char> vchKey  = ParseHex(vtest[n].pszKey);
-        vector<unsigned char> vchData = ParseHex(vtest[n].pszData);
-        vector<unsigned char> vchMAC  = ParseHex(vtest[n].pszMAC);
+        std::vector<unsigned char> vchKey  = ParseHex(vtest[n].pszKey);
+        std::vector<unsigned char> vchData = ParseHex(vtest[n].pszData);
+        std::vector<unsigned char> vchMAC  = ParseHex(vtest[n].pszMAC);
         unsigned char vchTemp[64];
 
         HMAC_SHA512_CTX ctx;

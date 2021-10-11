@@ -19,16 +19,6 @@
 #include <boost/algorithm/string/join.hpp>
 #include <boost/algorithm/string/predicate.hpp> // for startswith() and endswith()
 
-// Work around clang compilation problem in Boost 1.46:
-// /usr/include/boost/program_options/detail/config_file.hpp:163:17: error: call to function 'to_internal' that is neither visible in the template definition nor found by argument-dependent lookup
-// See also: http://stackoverflow.com/questions/10020179/compilation-fail-in-boost-librairies-program-options
-//           http://clang.debian.net/status.php?version=3.0&key=CANNOT_FIND_FUNCTION
-namespace boost {
-    namespace program_options {
-        std::string to_internal(const std::string&);
-    }
-}
-
 #include <boost/program_options/detail/config_file.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/filesystem.hpp>
@@ -64,7 +54,6 @@ namespace boost {
 # include <sys/prctl.h>
 #endif
 
-using namespace std;
 
 static const char alphanum[] =
       "0123456789"
@@ -89,15 +78,15 @@ const signed char p_util_hexdigit[256] =
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-map<string, string> mapArgs;
-map<string, vector<string> > mapMultiArgs;
+std::map<std::string, std::string> mapArgs;
+std::map<std::string, std::vector<std::string> > mapMultiArgs;
 bool fDebug = false;
 bool fPrintToConsole = false;
 bool fPrintToDebugLog = true;
 bool fDaemon = false;
 bool fServer = false;
 bool fCommandLine = false;
-string strMiscWarning;
+std::string strMiscWarning;
 bool fNoListen = false;
 bool fLogTimestamps = false;
 volatile bool fReopenDebugLog = false;
@@ -255,18 +244,18 @@ bool LogAcceptCategory(const char* category)
         // This helps prevent issues debugging global destructors,
         // where mapMultiArgs might be deleted before another
         // global destructor calls LogPrint()
-        static boost::thread_specific_ptr<set<string> > ptrCategory;
+        static boost::thread_specific_ptr<std::set<std::string> > ptrCategory;
         if (ptrCategory.get() == NULL)
         {
-            const vector<string>& categories = mapMultiArgs["-debug"];
-            ptrCategory.reset(new set<string>(categories.begin(), categories.end()));
+            const std::vector<std::string>& categories = mapMultiArgs["-debug"];
+            ptrCategory.reset(new std::set<std::string>(categories.begin(), categories.end()));
             // thread_specific_ptr automatically deletes the set when the thread ends.
         }
-        const set<string>& setCategories = *ptrCategory.get();
+        const std::set<std::string>& setCategories = *ptrCategory.get();
 
         // if not debugging everything and not debugging specific category, LogPrint does nothing.
-        if (setCategories.count(string("")) == 0 &&
-            setCategories.count(string(category)) == 0)
+        if (setCategories.count(std::string("")) == 0 &&
+            setCategories.count(std::string(category)) == 0)
             return false;
     }
     return true;
@@ -312,12 +301,12 @@ int LogPrintStr(const std::string &str)
     return ret;
 }
 
-void ParseString(const string& str, char c, vector<string>& v)
+void ParseString(const std::string& str, char c, std::vector<std::string>& v)
 {
     if (str.empty())
         return;
-    string::size_type i1 = 0;
-    string::size_type i2;
+    std::string::size_type i1 = 0;
+    std::string::size_type i2;
     while (true)
     {
         i2 = str.find(c, i1);
@@ -332,14 +321,14 @@ void ParseString(const string& str, char c, vector<string>& v)
 }
 
 
-string FormatMoney(int64_t n, bool fPlus)
+std::string FormatMoney(int64_t n, bool fPlus)
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
     int64_t n_abs = (n > 0 ? n : -n);
     int64_t quotient = n_abs/COIN;
     int64_t remainder = n_abs%COIN;
-    string str = strprintf("%d.%08d", quotient, remainder);
+    std::string str = strprintf("%d.%08d", quotient, remainder);
 
     // Right-trim excess zeros before the decimal point:
     int nTrim = 0;
@@ -356,14 +345,14 @@ string FormatMoney(int64_t n, bool fPlus)
 }
 
 
-bool ParseMoney(const string& str, int64_t& nRet)
+bool ParseMoney(const std::string& str, int64_t& nRet)
 {
     return ParseMoney(str.c_str(), nRet);
 }
 
 bool ParseMoney(const char* pszIn, int64_t& nRet)
 {
-    string strWhole;
+    std::string strWhole;
     int64_t nUnits = 0;
     const char* p = pszIn;
     while (isspace(*p))
@@ -403,10 +392,10 @@ bool ParseMoney(const char* pszIn, int64_t& nRet)
 
 // safeChars chosen to allow simple messages/URLs/email addresses, but avoid anything
 // even possibly remotely dangerous like & or >
-static string safeChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890 .,;_/:?@");
-string SanitizeString(const string& str)
+static std::string safeChars("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890 .,;_/:?@");
+std::string SanitizeString(const std::string& str)
 {
-    string strResult;
+    std::string strResult;
     for (std::string::size_type i = 0; i < str.size(); i++)
     {
         if (safeChars.find(str[i]) != std::string::npos)
@@ -433,7 +422,7 @@ static const signed char phexdigit[256] =
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
   -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, };
 
-bool IsHex(const string& str)
+bool IsHex(const std::string& str)
 {
     BOOST_FOREACH(unsigned char c, str)
     {
@@ -443,10 +432,10 @@ bool IsHex(const string& str)
     return (str.size() > 0) && (str.size()%2 == 0);
 }
 
-vector<unsigned char> ParseHex(const char* psz)
+std::vector<unsigned char> ParseHex(const char* psz)
 {
     // convert hex dump to vector
-    vector<unsigned char> vch;
+    std::vector<unsigned char> vch;
     while (true)
     {
         while (isspace(*psz))
@@ -464,12 +453,12 @@ vector<unsigned char> ParseHex(const char* psz)
     return vch;
 }
 
-vector<unsigned char> ParseHex(const string& str)
+std::vector<unsigned char> ParseHex(const std::string& str)
 {
     return ParseHex(str.c_str());
 }
 
-static void InterpretNegativeSetting(string name, map<string, string>& mapSettingsRet)
+static void InterpretNegativeSetting(std::string name, std::map<std::string, std::string>& mapSettingsRet)
 {
     // interpret -nofoo as -foo=0 (and -nofoo=0 as -foo=1) as long as -foo not set
     if (name.find("-no") == 0)
@@ -511,9 +500,9 @@ void ParseParameters(int argc, const char* const argv[])
     }
 
     // New 0.6 features:
-    BOOST_FOREACH(const PAIRTYPE(string,string)& entry, mapArgs)
+    BOOST_FOREACH(const PAIRTYPE(std::string,std::string)& entry, mapArgs)
     {
-        string name = entry.first;
+        std::string name = entry.first;
 
         //  interpret --foo as -foo (as long as both are not set)
         if (name.find("--") == 0)
@@ -571,11 +560,11 @@ bool SoftSetBoolArg(const std::string& strArg, bool fValue)
 }
 
 
-string EncodeBase64(const unsigned char* pch, size_t len)
+std::string EncodeBase64(const unsigned char* pch, size_t len)
 {
     static const char *pbase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    string strRet="";
+    std::string strRet="";
     strRet.reserve((len+2)/3*4);
 
     int mode=0, left=0;
@@ -617,12 +606,12 @@ string EncodeBase64(const unsigned char* pch, size_t len)
     return strRet;
 }
 
-string EncodeBase64(const string& str)
+std::string EncodeBase64(const std::string& str)
 {
     return EncodeBase64((const unsigned char*)str.c_str(), str.size());
 }
 
-vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
+std::vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
 {
     static const int decode64_table[256] =
     {
@@ -644,7 +633,7 @@ vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
     if (pfInvalid)
         *pfInvalid = false;
 
-    vector<unsigned char> vchRet;
+    std::vector<unsigned char> vchRet;
     vchRet.reserve(strlen(p)*3/4);
 
     int mode = 0;
@@ -705,17 +694,17 @@ vector<unsigned char> DecodeBase64(const char* p, bool* pfInvalid)
     return vchRet;
 }
 
-string DecodeBase64(const string& str)
+std::string DecodeBase64(const std::string& str)
 {
-    vector<unsigned char> vchRet = DecodeBase64(str.c_str());
-    return string((const char*)&vchRet[0], vchRet.size());
+    std::vector<unsigned char> vchRet = DecodeBase64(str.c_str());
+    return std::string((const char*)&vchRet[0], vchRet.size());
 }
 
-string EncodeBase32(const unsigned char* pch, size_t len)
+std::string EncodeBase32(const unsigned char* pch, size_t len)
 {
     static const char *pbase32 = "abcdefghijklmnopqrstuvwxyz234567";
 
-    string strRet="";
+    std::string strRet="";
     strRet.reserve((len+4)/5*8);
 
     int mode=0, left=0;
@@ -770,12 +759,12 @@ string EncodeBase32(const unsigned char* pch, size_t len)
     return strRet;
 }
 
-string EncodeBase32(const string& str)
+std::string EncodeBase32(const std::string& str)
 {
     return EncodeBase32((const unsigned char*)str.c_str(), str.size());
 }
 
-vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
+std::vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
 {
     static const int decode32_table[256] =
     {
@@ -797,7 +786,7 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
     if (pfInvalid)
         *pfInvalid = false;
 
-    vector<unsigned char> vchRet;
+    std::vector<unsigned char> vchRet;
     vchRet.reserve((strlen(p))*5/8);
 
     int mode = 0;
@@ -892,10 +881,10 @@ vector<unsigned char> DecodeBase32(const char* p, bool* pfInvalid)
     return vchRet;
 }
 
-string DecodeBase32(const string& str)
+std::string DecodeBase32(const std::string& str)
 {
-    vector<unsigned char> vchRet = DecodeBase32(str.c_str());
-    return string((const char*)&vchRet[0], vchRet.size());
+    std::vector<unsigned char> vchRet = DecodeBase32(str.c_str());
+    return std::string((const char*)&vchRet[0], vchRet.size());
 }
 
 
@@ -923,7 +912,7 @@ bool WildcardMatch(const char* psz, const char* mask)
     }
 }
 
-bool WildcardMatch(const string& str, const string& mask)
+bool WildcardMatch(const std::string& str, const std::string& mask)
 {
     return WildcardMatch(str.c_str(), mask.c_str());
 }
@@ -969,9 +958,7 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 }
 
 boost::filesystem::path GetDefaultDataDir()
-{
-    namespace fs = boost::filesystem;
-    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Honey
+{    // Windows < Vista: C:\Documents and Settings\Username\Application Data\Honey
     // Windows >= Vista: C:\Users\Username\AppData\Roaming\Honey
     // Mac: ~/Library/Application Support/Honey
     // Unix: ~/.honey
@@ -979,16 +966,16 @@ boost::filesystem::path GetDefaultDataDir()
     // Windows
     return GetSpecialFolderPath(CSIDL_APPDATA) / "Honey";
 #else
-    fs::path pathRet;
+    boost::filesystem::path pathRet;
     char* pszHome = getenv("HOME");
     if (pszHome == NULL || strlen(pszHome) == 0)
-        pathRet = fs::path("/");
+        pathRet = boost::filesystem::path("/");
     else
-        pathRet = fs::path(pszHome);
+        pathRet = boost::filesystem::path(pszHome);
 #ifdef MAC_OSX
     // Mac
     pathRet /= "Library/Application Support";
-    fs::create_directory(pathRet);
+    boost::filesystem::create_directory(pathRet);
     return pathRet / "Honey";
 #else
     // Unix
@@ -1002,14 +989,12 @@ static CCriticalSection csPathCached;
 
 const boost::filesystem::path &GetDataDir(bool fNetSpecific)
 {
-    namespace fs = boost::filesystem;
-
     LOCK(csPathCached);
 
     int nNet = CChainParams::MAX_NETWORK_TYPES;
     if (fNetSpecific) nNet = Params().NetworkID();
 
-    fs::path &path = pathCached[nNet];
+    boost::filesystem::path &path = pathCached[nNet];
 
     // This can be called during exceptions by LogPrintf(), so we cache the
     // value so we don't have to do memory allocations after that.
@@ -1017,8 +1002,8 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
         return path;
 
     if (mapArgs.count("-datadir")) {
-        path = fs::system_complete(mapArgs["-datadir"]);
-        if (!fs::is_directory(path)) {
+        path = boost::filesystem::system_complete(mapArgs["-datadir"]);
+        if (!boost::filesystem::is_directory(path)) {
             path = "";
             return path;
         }
@@ -1028,7 +1013,7 @@ const boost::filesystem::path &GetDataDir(bool fNetSpecific)
     if (fNetSpecific)
         path /= Params().DataDir();
 
-    fs::create_directory(path);
+    boost::filesystem::create_directory(path);
 
     return path;
 }
@@ -1046,57 +1031,23 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
-void ReadConfigFile(map<string, string>& mapSettingsRet,
-                    map<string, vector<string> >& mapMultiSettingsRet)
+void ReadConfigFile(std::map<std::string, std::string>& mapSettingsRet,
+                    std::map<std::string, std::vector<std::string> >& mapMultiSettingsRet)
 {
-    int confLoop = 0;
-    injectConfig:
+
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good())
     {
-        boost::filesystem::path ConfPath;
-               ConfPath = GetDataDir() / "honey.conf";
-               FILE* ConfFile = fopen(ConfPath.string().c_str(), "w");
-               fprintf(ConfFile, "listen=1\n");
-               fprintf(ConfFile, "server=1\n");
-               fprintf(ConfFile, "maxconnections=250\n");
-               fprintf(ConfFile, "rpcuser=yourusername\n");
-
-               char s[33];
-               for (int i = 0; i < 33; ++i)
-               {
-                   s[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
-               }
-
-               std::string str(s);
-               std::string rpcpass = "rpcpassword=" + str + "\n";
-               fprintf(ConfFile, rpcpass.c_str());
-               fprintf(ConfFile, "port=40638\n");
-               fprintf(ConfFile, "rpcport=40639\n");
-               fprintf(ConfFile, "rpcconnect=127.0.0.1\n");
-               fprintf(ConfFile, "rpcallowip=127.0.0.1\n");
-
-               fclose(ConfFile);
-
-               // Returns our config path, created config file is NOT loaded first time...
-               // Wallet will need to be reloaded before config file is properly read...
-               return ;
+        return;
     }
 
-    // loop back and load config for initial generation
-    if (confLoop < 1)
-    {
-        ++confLoop;
-        goto injectConfig;
-    }
-
-    set<string> setOptions;
+    std::set<std::string> setOptions;
     setOptions.insert("*");
 
     for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it)
     {
         // Don't overwrite existing settings so command line settings override honey.conf
-        string strKey = string("-") + it->string_key;
+        std::string strKey = std::string("-") + it->string_key;
         if (mapSettingsRet.count(strKey) == 0)
         {
             mapSettingsRet[strKey] = it->value[0];
@@ -1206,7 +1157,7 @@ void seed_insecure_rand(bool fDeterministic)
     }
 }
 
-string FormatVersion(int nVersion)
+std::string FormatVersion(int nVersion)
 {
     if (nVersion%100 == 0)
         return strprintf("%d.%d.%d", nVersion/1000000, (nVersion/10000)%100, (nVersion/100)%100);
@@ -1214,7 +1165,7 @@ string FormatVersion(int nVersion)
         return strprintf("%d.%d.%d.%d", nVersion/1000000, (nVersion/10000)%100, (nVersion/100)%100, nVersion%100);
 }
 
-string FormatFullVersion()
+std::string FormatFullVersion()
 {
     return CLIENT_BUILD;
 }
@@ -1234,17 +1185,15 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
 #ifdef WIN32
 boost::filesystem::path GetSpecialFolderPath(int nFolder, bool fCreate)
 {
-    namespace fs = boost::filesystem;
-
     char pszPath[MAX_PATH] = "";
 
     if(SHGetSpecialFolderPathA(NULL, pszPath, nFolder, fCreate))
     {
-        return fs::path(pszPath);
+        return boost::filesystem::path(pszPath);
     }
 
     LogPrintf("SHGetSpecialFolderPathA() failed, could not obtain requested path.\n");
-    return fs::path("");
+    return boost::filesystem::path("");
 }
 #endif
 

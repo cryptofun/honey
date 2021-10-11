@@ -18,6 +18,7 @@
 
 #include <boost/type_traits/is_fundamental.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/variant/get.hpp>
 
 #include "allocators.h"
 #include "version.h"

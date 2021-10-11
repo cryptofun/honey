@@ -181,7 +181,7 @@ public:
     typedef std::multimap<int64_t, TxPair > TxItems;
 
     /** Get the wallet's activity log
-        @return multimap of ordered transactions and accounting entries
+        @return std::multimap of ordered transactions and accounting entries
         @warning Returned pointers are *only* valid within the scope of passed acentries
      */
     TxItems OrderedTxItems(std::list<CAccountingEntry>& acentries, std::string strAccount = "");
@@ -751,7 +751,7 @@ public:
     int64_t nTimeExpires;
     std::string strComment;
     //// todo: add something to note what created it (user, getnewaddress, change)
-    ////   maybe should have a map<string, string> property map
+    ////   maybe should have a std::map<std::string, std::string> property map
 
     CWalletKey(int64_t nExpires=0)
     {
