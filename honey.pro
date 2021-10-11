@@ -14,6 +14,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 }
 
+QMAKE_CXXFLAGS += -Wno-deprecated-copy
+
 win32{
 BOOST_LIB_SUFFIX=-mgw63-mt-s-1_63
 BOOST_INCLUDE_PATH=C:/deps/boost_1_63_0

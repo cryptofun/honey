@@ -181,7 +181,7 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Status, 23);
         transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Date, 120);
         transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Type, 120);
-        transactionView->horizontalHeader()->setResizeMode(TransactionTableModel::ToAddress, QHeaderView::Stretch);
+        transactionView->horizontalHeader()->setSectionResizeMode(TransactionTableModel::ToAddress, QHeaderView::Stretch);
         transactionView->horizontalHeader()->resizeSection(TransactionTableModel::Amount, 100);
     }
 }
@@ -190,7 +190,19 @@ void TransactionView::chooseDate(int idx)
 {
     if(!transactionProxyModel)
         return;
-    QDate current = QDate::currentDate();
+
+    const QDate currentDate = QDate::currentDate();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QDateTime startofDay = currentDate.startOfDay();
+#else
+    const QDateTime startofDay = QDateTime(currentDate);
+#endif
+    const QDateTime startOfWeek =
+        startofDay.addDays(-(currentDate.dayOfWeek() - 1));
+    const QDateTime startOfMonth = startofDay.addDays(-(currentDate.day() - 1));
+    const QDateTime startOfYear =
+        startofDay.addDays(-(currentDate.dayOfYear() - 1));
+
     dateRangeWidget->setVisible(false);
     switch(dateWidget->itemData(idx).toInt())
     {
@@ -201,30 +213,28 @@ void TransactionView::chooseDate(int idx)
         break;
     case Today:
         transactionProxyModel->setDateRange(
-                QDateTime(current),
+                startofDay,
                 TransactionFilterProxy::MAX_DATE);
         break;
     case ThisWeek: {
         // Find last Monday
-        QDate startOfWeek = current.addDays(-(current.dayOfWeek()-1));
         transactionProxyModel->setDateRange(
-                QDateTime(startOfWeek),
+                startOfWeek,
                 TransactionFilterProxy::MAX_DATE);
 
         } break;
     case ThisMonth:
         transactionProxyModel->setDateRange(
-                QDateTime(QDate(current.year(), current.month(), 1)),
+                startOfMonth,
                 TransactionFilterProxy::MAX_DATE);
         break;
     case LastMonth:
-        transactionProxyModel->setDateRange(
-                QDateTime(QDate(current.year(), current.month()-1, 1)),
-                QDateTime(QDate(current.year(), current.month(), 1)));
+        transactionProxyModel->setDateRange(startOfMonth.addMonths(-1),
+                                            startOfMonth);
         break;
     case ThisYear:
         transactionProxyModel->setDateRange(
-                QDateTime(QDate(current.year(), 1, 1)),
+                startOfYear,
                 TransactionFilterProxy::MAX_DATE);
         break;
     case Range:
@@ -420,9 +430,16 @@ void TransactionView::dateRangeChanged()
 {
     if(!transactionProxyModel)
         return;
-    transactionProxyModel->setDateRange(
-            QDateTime(dateFrom->date()),
-            QDateTime(dateTo->date()).addDays(1));
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+    const QDateTime rangeFrom = dateFrom->date().startOfDay();
+    const QDateTime rangeTo = dateTo->date().endOfDay();
+#else
+    const QDateTime rangeFrom = QDateTime(dateFrom->date());
+    const QDateTime rangeTo = QDateTime(dateTo->date()).addDays(1);
+#endif
+
+    transactionProxyModel->setDateRange(rangeFrom, rangeTo);
 }
 
 void TransactionView::focusTransaction(const QModelIndex &idx)

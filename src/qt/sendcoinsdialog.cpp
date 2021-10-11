@@ -145,7 +145,7 @@ void SendCoinsDialog::on_sendButton_clicked()
     QStringList formatted;
     foreach(const SendCoinsRecipient &rcp, recipients)
     {
-        formatted.append(tr("<b>%1</b> to %2 (%3)").arg(HoneyUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount), Qt::escape(rcp.label), rcp.address));
+        formatted.append(tr("<b>%1</b> to %2 (%3)").arg(HoneyUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), rcp.amount), QString(rcp.label).toHtmlEscaped(), rcp.address));
     }
 
     fNewRecipientAllowed = false;
@@ -469,7 +469,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString & text)
             {
                 CPubKey pubkey;
                 CKeyID keyid;
-                CHoneyAddress(text.toStdString()).GetKeyID(keyid);   
+                CHoneyAddress(text.toStdString()).GetKeyID(keyid);
                 if (model->getPubKey(keyid, pubkey))
                     ui->labelCoinControlChangeLabel->setText(tr("(no label)"));
                 else
