@@ -10,7 +10,6 @@
 #include "txmempool.h"
 #include "net.h"
 #include "script.h"
-#include "scrypt.h"
 #include "hash.h"
 #include "uint256.h"
 

@@ -128,13 +128,13 @@ OBJS= \
     obj/hash.o \
     obj/noui.o \
     obj/kernel.o \
-    obj/pbkdf2.o \
-    obj/scrypt.o \
-    obj/scrypt-arm.o \
-    obj/scrypt-x86.o \
-    obj/scrypt-x86_64.o \
+    obj/crypto/scrypt/pbkdf2.o \
+    obj/crypto/scrypt/scrypt.o \
+    obj/crypto/scrypt/scrypt-arm.o \
+    obj/crypto/scrypt/scrypt-x86.o \
+    obj/crypto/scrypt/scrypt-x86_64.o \
     obj/chainparams.o \
-    obj/blake2s-ref.o
+    obj/crypto/blake2/blake2s-ref.o
 
 ifeq (${USE_WALLET}, 1)
     DEFS += -DENABLE_WALLET
@@ -166,13 +166,16 @@ obj/build.h: FORCE
 version.cpp: obj/build.h
 DEFS += -DHAVE_BUILD_INFO
 
-obj/scrypt-x86.o: scrypt-x86.S
+obj/crypto/scrypt/scrypt-x86.o: crypto/scrypt/scrypt-x86.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
-obj/scrypt-x86_64.o: scrypt-x86_64.S
+obj/crypto/scrypt/scrypt-x86_64.o: crypto/scrypt/scrypt-x86_64.S
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
-obj/scrypt-arm.o: scrypt-arm.S
+obj/crypto/scrypt/scrypt-arm.o: crypto/scrypt/scrypt-arm.S
+	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
+
+obj/crypto/blake2/blake2s-ref.o: crypto/blake2/blake2s-ref.c
 	$(CXX) -c $(xCXXFLAGS) -MMD -o $@ $<
 
 obj/%.o: %.cpp

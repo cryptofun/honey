@@ -179,8 +179,8 @@ HEADERS += src/qt/honeygui.h \
     src/hash.h \
     src/uint256.h \
     src/kernel.h \
-    src/scrypt.h \
-    src/pbkdf2.h \
+    src/crypto/scrypt/scrypt.h \
+    src/crypto/scrypt/pbkdf2.h \
     src/serialize.h \
     src/core.h \
     src/main.h \
@@ -242,8 +242,8 @@ HEADERS += src/qt/honeygui.h \
     src/clientversion.h \
     src/threadsafety.h \
     src/tinyformat.h \
-    src/blake2.h \
-    src/blake2-impl.h
+    src/crypto/blake2/blake2.h \
+    src/crypto/blake2/blake2-impl.h
 
 SOURCES += src/qt/honey.cpp src/qt/honeygui.cpp \
     src/qt/transactiontablemodel.cpp \
@@ -317,12 +317,12 @@ SOURCES += src/qt/honey.cpp src/qt/honeygui.cpp \
     src/qt/blockbrowser.cpp \
     src/noui.cpp \
     src/kernel.cpp \
-    src/scrypt-arm.S \
-    src/scrypt-x86.S \
-    src/scrypt-x86_64.S \
-    src/scrypt.cpp \
-    src/pbkdf2.cpp \
-    src/blake2s-ref.c
+    src/crypto/scrypt/scrypt-arm.S \
+    src/crypto/scrypt/scrypt-x86.S \
+    src/crypto/scrypt/scrypt-x86_64.S \
+    src/crypto/scrypt/scrypt.cpp \
+    src/crypto/scrypt/pbkdf2.cpp \
+    src/crypto/blake2/blake2s-ref.c
 
 RESOURCES += \
     src/qt/honey.qrc
