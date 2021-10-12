@@ -14,6 +14,7 @@
 #include <QFont>
 #include <QLineEdit>
 #include <QUrl>
+#include <QUrlQuery>
 #include <QAbstractItemView>
 #include <QClipboard>
 #include <QFileDialog>
