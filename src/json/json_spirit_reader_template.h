@@ -15,21 +15,12 @@
 #include <boost/function.hpp>
 #include <boost/version.hpp>
 
-#if BOOST_VERSION >= 103800
-    #include <boost/spirit/include/classic_core.hpp>
-    #include <boost/spirit/include/classic_confix.hpp>
-    #include <boost/spirit/include/classic_escape_char.hpp>
-    #include <boost/spirit/include/classic_multi_pass.hpp>
-    #include <boost/spirit/include/classic_position_iterator.hpp>
-    #define spirit_namespace boost::spirit::classic
-#else
-    #include <boost/spirit/core.hpp>
-    #include <boost/spirit/utility/confix.hpp>
-    #include <boost/spirit/utility/escape_char.hpp>
-    #include <boost/spirit/iterator/multi_pass.hpp>
-    #include <boost/spirit/iterator/position_iterator.hpp>
-    #define spirit_namespace boost::spirit
-#endif
+#include <boost/spirit/include/classic_core.hpp>
+#include <boost/spirit/include/classic_confix.hpp>
+#include <boost/spirit/include/classic_escape_char.hpp>
+#include <boost/spirit/include/classic_multi_pass.hpp>
+#include <boost/spirit/include/classic_position_iterator.hpp>
+#define spirit_namespace boost::spirit::classic
 
 namespace json_spirit
 {
