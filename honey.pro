@@ -9,11 +9,6 @@ CONFIG += no_include_pwd
 CONFIG += thread
 CONFIG += static
 
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-    DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
-}
-
 QMAKE_CXXFLAGS += -Wno-deprecated-copy
 
 win32{
