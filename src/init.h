@@ -5,7 +5,7 @@
 #ifndef HONEY_INIT_H
 #define HONEY_INIT_H
 
-#include "wallet.h"
+#include <wallet.h>
 
 #include <boost/thread.hpp>
 

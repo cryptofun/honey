@@ -1,9 +1,9 @@
-#include "blockbrowser.h"
-#include "ui_blockbrowser.h"
-#include "main.h"
-#include "base58.h"
-#include "clientmodel.h"
-#include "txdb.h"
+#include <blockbrowser.h>
+#include <ui_blockbrowser.h>
+#include <main.h>
+#include <base58.h>
+#include <clientmodel.h>
+#include <txdb.h>
 
 
 double GetDifficulty(const CBlockIndex* blockindex);

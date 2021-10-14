@@ -3,7 +3,7 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include <string>
 
-#include "version.h"
+#include <version.h>
 
 // Name of client reported in the 'version' message. Report the same name
 // for both honeyd and honey, to make it harder for attackers to
@@ -30,7 +30,7 @@ const std::string CLIENT_NAME("Honey");
 
 // First, include build.h if requested
 #ifdef HAVE_BUILD_INFO
-#    include "build.h"
+#    include <build.h>
 #endif
 
 // git will put "#define GIT_ARCHIVE 1" on the next line inside archives.

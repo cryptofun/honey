@@ -1,6 +1,6 @@
-#include "uritests.h"
-#include "../guiutil.h"
-#include "../walletmodel.h"
+#include <uritests.h>
+#include <../guiutil.h>
+#include <../walletmodel.h>
 
 #include <QUrl>
 

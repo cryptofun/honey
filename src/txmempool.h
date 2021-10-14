@@ -5,8 +5,8 @@
 #ifndef HONEY_TXMEMPOOL_H
 #define HONEY_TXMEMPOOL_H
 
-#include "core.h"
-#include "sync.h"
+#include <core.h>
+#include <sync.h>
 
 /*
  * CTxMemPool stores valid-according-to-the-current-best-chain

@@ -5,13 +5,13 @@
 #ifndef HONEY_HASH_H
 #define HONEY_HASH_H
 
-#include "uint256.h"
-#include "serialize.h"
+#include <uint256.h>
+#include <serialize.h>
 
 #include <openssl/sha.h>
 #include <openssl/ripemd.h>
 
-#include "crypto/blake2/blake2.h"
+#include <crypto/blake2/blake2.h>
 
 template<typename T1>
 inline uint256 Hash(const T1 pbegin, const T1 pend)

@@ -1,11 +1,11 @@
-#include "rpcconsole.h"
-#include "ui_rpcconsole.h"
+#include <rpcconsole.h>
+#include <ui_rpcconsole.h>
 
-#include "clientmodel.h"
-#include "guiutil.h"
+#include <clientmodel.h>
+#include <guiutil.h>
 
-#include "rpcserver.h"
-#include "rpcclient.h"
+#include <rpcserver.h>
+#include <rpcclient.h>
 
 #include <QTime>
 #include <QThread>
@@ -50,7 +50,7 @@ signals:
     void reply(int category, const QString &command);
 };
 
-#include "rpcconsole.moc"
+#include <rpcconsole.moc>
 
 void RPCExecutor::start()
 {

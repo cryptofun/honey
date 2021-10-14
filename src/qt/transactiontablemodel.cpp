@@ -1,16 +1,16 @@
-#include "transactiontablemodel.h"
+#include <transactiontablemodel.h>
 
-#include "guiutil.h"
-#include "transactionrecord.h"
-#include "guiconstants.h"
-#include "transactiondesc.h"
-#include "walletmodel.h"
-#include "optionsmodel.h"
-#include "addresstablemodel.h"
-#include "honeyunits.h"
+#include <guiutil.h>
+#include <transactionrecord.h>
+#include <guiconstants.h>
+#include <transactiondesc.h>
+#include <walletmodel.h>
+#include <optionsmodel.h>
+#include <addresstablemodel.h>
+#include <honeyunits.h>
 
-#include "wallet.h"
-#include "ui_interface.h"
+#include <wallet.h>
+#include <ui_interface.h>
 
 #include <QList>
 #include <QColor>

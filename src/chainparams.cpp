@@ -3,11 +3,11 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "assert.h"
+#include <assert.h>
 
-#include "chainparams.h"
-#include "main.h"
-#include "util.h"
+#include <chainparams.h>
+#include <main.h>
+#include <util.h>
 
 #include <boost/assign/list_of.hpp>
 
@@ -16,7 +16,7 @@ struct SeedSpec6 {
     uint16_t port;
 };
 
-#include "chainparamsseeds.h"
+#include <chainparamsseeds.h>
 
 //
 // Main network

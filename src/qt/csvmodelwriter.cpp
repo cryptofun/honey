@@ -1,4 +1,4 @@
-#include "csvmodelwriter.h"
+#include <csvmodelwriter.h>
 
 #include <QAbstractItemModel>
 #include <QFile>
@@ -85,4 +85,3 @@ bool CSVModelWriter::write()
 
     return file.error() == QFile::NoError;
 }
-

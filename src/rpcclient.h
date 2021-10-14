@@ -6,9 +6,9 @@
 #ifndef _HONEYRPC_CLIENT_H_
 #define _HONEYRPC_CLIENT_H_ 1
 
-#include "json/json_spirit_reader_template.h"
-#include "json/json_spirit_utils.h"
-#include "json/json_spirit_writer_template.h"
+#include <json/json_spirit_reader_template.h>
+#include <json/json_spirit_utils.h>
+#include <json/json_spirit_writer_template.h>
 
 int CommandLineRPC(int argc, char *argv[]);
 

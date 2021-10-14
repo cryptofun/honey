@@ -5,13 +5,13 @@
 #ifndef HONEY_MAIN_H
 #define HONEY_MAIN_H
 
-#include "core.h"
-#include "sync.h"
-#include "txmempool.h"
-#include "net.h"
-#include "script.h"
-#include "hash.h"
-#include "uint256.h"
+#include <core.h>
+#include <sync.h>
+#include <txmempool.h>
+#include <net.h>
+#include <script.h>
+#include <hash.h>
+#include <uint256.h>
 
 #include <limits>
 #include <list>

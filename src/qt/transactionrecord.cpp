@@ -1,8 +1,8 @@
-#include "transactionrecord.h"
+#include <transactionrecord.h>
 
-#include "base58.h"
-#include "timedata.h"
-#include "wallet.h"
+#include <base58.h>
+#include <timedata.h>
+#include <wallet.h>
 
 /* Return positive answer if transaction should be shown in list.
  */

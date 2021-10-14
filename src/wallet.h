@@ -5,20 +5,20 @@
 #ifndef HONEY_WALLET_H
 #define HONEY_WALLET_H
 
-#include "walletdb.h"
+#include <walletdb.h>
 
 #include <string>
 #include <vector>
 
 #include <stdlib.h>
 
-#include "crypter.h"
-#include "main.h"
-#include "key.h"
-#include "keystore.h"
-#include "script.h"
-#include "ui_interface.h"
-#include "util.h"
+#include <crypter.h>
+#include <main.h>
+#include <key.h>
+#include <keystore.h>
+#include <script.h>
+#include <ui_interface.h>
+#include <util.h>
 
 // Settings
 extern int64_t nTransactionFee;

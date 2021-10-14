@@ -6,9 +6,9 @@
 #ifndef HONEY_DB_H
 #define HONEY_DB_H
 
-#include "serialize.h"
-#include "sync.h"
-#include "version.h"
+#include <serialize.h>
+#include <sync.h>
+#include <version.h>
 
 #include <map>
 #include <string>

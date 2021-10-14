@@ -2,8 +2,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "addrman.h"
-#include "hash.h"
+#include <addrman.h>
+#include <hash.h>
 
 
 int CAddrInfo::GetTriedBucket(const uint256& nKey) const

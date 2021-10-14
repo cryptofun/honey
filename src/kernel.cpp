@@ -5,9 +5,9 @@
 
 #include <boost/assign/list_of.hpp>
 
-#include "kernel.h"
-#include "txdb.h"
-#include "hash.h"
+#include <kernel.h>
+#include <txdb.h>
+#include <hash.h>
 
 
 // Get time weight

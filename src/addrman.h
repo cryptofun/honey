@@ -4,11 +4,11 @@
 #ifndef _HONEY_ADDRMAN
 #define _HONEY_ADDRMAN 1
 
-#include "netbase.h"
-#include "protocol.h"
-#include "sync.h"
-#include "timedata.h"
-#include "util.h"
+#include <netbase.h>
+#include <protocol.h>
+#include <sync.h>
+#include <timedata.h>
+#include <util.h>
 
 #include <map>
 #include <vector>

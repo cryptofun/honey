@@ -1,4 +1,4 @@
-#include "monitoreddatamapper.h"
+#include <monitoreddatamapper.h>
 
 #include <QWidget>
 #include <QMetaObject>

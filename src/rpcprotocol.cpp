@@ -3,8 +3,8 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "rpcprotocol.h"
-#include "util.h"
+#include <rpcprotocol.h>
+#include <util.h>
 
 #include <stdint.h>
 
@@ -12,7 +12,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 
-#include "json/json_spirit_writer_template.h"
+#include <json/json_spirit_writer_template.h>
 #include <fstream>
 
 

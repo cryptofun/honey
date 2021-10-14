@@ -1,13 +1,13 @@
-#include "clientmodel.h"
+#include <clientmodel.h>
 
-#include "guiconstants.h"
-#include "optionsmodel.h"
-#include "addresstablemodel.h"
-#include "transactiontablemodel.h"
+#include <guiconstants.h>
+#include <optionsmodel.h>
+#include <addresstablemodel.h>
+#include <transactiontablemodel.h>
 
-#include "chainparams.h"
-#include "main.h"
-#include "ui_interface.h"
+#include <chainparams.h>
+#include <main.h>
+#include <ui_interface.h>
 
 #include <QDateTime>
 #include <QTimer>

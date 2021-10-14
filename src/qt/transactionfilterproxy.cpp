@@ -1,7 +1,7 @@
-#include "transactionfilterproxy.h"
+#include <transactionfilterproxy.h>
 
-#include "transactiontablemodel.h"
-#include "transactionrecord.h"
+#include <transactiontablemodel.h>
+#include <transactionrecord.h>
 
 #include <QDateTime>
 

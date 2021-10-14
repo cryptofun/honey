@@ -4,7 +4,7 @@
 #ifndef HONEY_VERSION_H
 #define HONEY_VERSION_H
 
-#include "clientversion.h"
+#include <clientversion.h>
 #include <string>
 
 //

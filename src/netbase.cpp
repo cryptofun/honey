@@ -3,10 +3,10 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "netbase.h"
-#include "util.h"
-#include "sync.h"
-#include "hash.h"
+#include <netbase.h>
+#include <util.h>
+#include <sync.h>
+#include <hash.h>
 
 #ifndef WIN32
 #include <sys/fcntl.h>

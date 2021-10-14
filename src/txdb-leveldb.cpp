@@ -14,11 +14,11 @@
 #include <leveldb/filter_policy.h>
 #include <memenv/memenv.h>
 
-#include "kernel.h"
-#include "txdb.h"
-#include "util.h"
-#include "main.h"
-#include "chainparams.h"
+#include <kernel.h>
+#include <txdb.h>
+#include <util.h>
+#include <main.h>
+#include <chainparams.h>
 
 
 leveldb::DB *txdb; // global pointer for LevelDB object instance

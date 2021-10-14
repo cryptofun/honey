@@ -15,8 +15,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "blake2.h"
-#include "blake2-impl.h"
+#include <crypto/blake2/blake2.h>
+#include <crypto/blake2/blake2-impl.h>
 
 static const uint32_t blake2s_IV[8] =
 {
@@ -319,7 +319,7 @@ int blake2s_final( blake2s_state *S, uint8_t *out, uint8_t outlen )
 
   for( int i = 0; i < 8; ++i ) /* Output full hash to temp buffer */
     store32( buffer + sizeof( S->h[i] ) * i, S->h[i] );
-    
+
   memcpy( out, buffer, outlen );
   return 0;
 }
@@ -351,7 +351,7 @@ int blake2s( uint8_t *out, const void *in, const void *key, const uint8_t outlen
 
 #if defined(BLAKE2S_SELFTEST)
 #include <string.h>
-#include "blake2-kat.h"
+#include <blake2-kat.h>
 int main( int argc, char **argv )
 {
   uint8_t key[BLAKE2S_KEYBYTES];
@@ -379,5 +379,3 @@ int main( int argc, char **argv )
   return 0;
 }
 #endif
-
-

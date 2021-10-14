@@ -5,8 +5,8 @@
 #define  HONEY_CHECKPOINT_H
 
 #include <map>
-#include "net.h"
-#include "util.h"
+#include <net.h>
+#include <util.h>
 
 class uint256;
 class CBlockIndex;

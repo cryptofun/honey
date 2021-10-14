@@ -3,13 +3,13 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "util.h"
+#include <util.h>
 
-#include "chainparams.h"
-#include "sync.h"
-#include "ui_interface.h"
-#include "uint256.h"
-#include "version.h"
+#include <chainparams.h>
+#include <sync.h>
+#include <ui_interface.h>
+#include <uint256.h>
+#include <version.h>
 
 #include <algorithm>
 
@@ -49,7 +49,7 @@
 #define NOMINMAX
 #endif
 #include <io.h> /* for _commit */
-#include "shlobj.h"
+#include <shlobj.h>
 #elif defined(__linux__)
 # include <sys/prctl.h>
 #endif

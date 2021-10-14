@@ -1,13 +1,13 @@
-#include "coincontroldialog.h"
-#include "ui_coincontroldialog.h"
+#include <coincontroldialog.h>
+#include <ui_coincontroldialog.h>
 
-#include "init.h"
-#include "base58.h"
-#include "honeyunits.h"
-#include "walletmodel.h"
-#include "addresstablemodel.h"
-#include "optionsmodel.h"
-#include "coincontrol.h"
+#include <init.h>
+#include <base58.h>
+#include <honeyunits.h>
+#include <walletmodel.h>
+#include <addresstablemodel.h>
+#include <optionsmodel.h>
+#include <coincontrol.h>
 
 #include <QApplication>
 #include <QCheckBox>

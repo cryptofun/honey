@@ -1,12 +1,12 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/variant.hpp>
 
-#include "json/json_spirit_reader_template.h"
-#include "json/json_spirit_writer_template.h"
-#include "json/json_spirit_utils.h"
+#include <json/json_spirit_reader_template.h>
+#include <json/json_spirit_writer_template.h>
+#include <json/json_spirit_utils.h>
 
-#include "base58.h"
-#include "util.h"
+#include <base58.h>
+#include <util.h>
 
 extern json_spirit::Array read_json(const std::string& filename);
 

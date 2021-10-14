@@ -16,11 +16,11 @@
 #include <arpa/inet.h>
 #endif
 
-#include "mruset.h"
-#include "netbase.h"
-#include "protocol.h"
-#include "addrman.h"
-#include "hash.h"
+#include <mruset.h>
+#include <netbase.h>
+#include <protocol.h>
+#include <addrman.h>
+#include <hash.h>
 
 class CNode;
 class CBlockIndex;

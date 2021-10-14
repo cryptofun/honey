@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "serialize.h"
+#include <serialize.h>
 
 
 BOOST_AUTO_TEST_SUITE(serialize_tests)

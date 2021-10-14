@@ -34,7 +34,7 @@ typedef u_int SOCKET;
 #define MSG_DONTWAIT        0
 typedef int socklen_t;
 #else
-#include "errno.h"
+#include <errno.h>
 #define WSAGetLastError()   errno
 #define WSAEINVAL           EINVAL
 #define WSAEALREADY         EALREADY

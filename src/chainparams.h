@@ -6,8 +6,8 @@
 #ifndef HONEY_CHAIN_PARAMS_H
 #define HONEY_CHAIN_PARAMS_H
 
-#include "uint256.h"
-#include "util.h"
+#include <uint256.h>
+#include <util.h>
 
 #include <vector>
 

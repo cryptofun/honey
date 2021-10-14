@@ -7,36 +7,36 @@
 
 #include <QApplication>
 
-#include "honeygui.h"
+#include <honeygui.h>
 
-#include "transactiontablemodel.h"
-#include "addressbookpage.h"
-#include "sendcoinsdialog.h"
-#include "signverifymessagedialog.h"
-#include "optionsdialog.h"
-#include "aboutdialog.h"
-#include "clientmodel.h"
-#include "walletmodel.h"
-#include "editaddressdialog.h"
-#include "optionsmodel.h"
-#include "transactiondescdialog.h"
-#include "addresstablemodel.h"
-#include "transactionview.h"
-#include "overviewpage.h"
-#include "honeyunits.h"
-#include "guiconstants.h"
-#include "askpassphrasedialog.h"
-#include "notificator.h"
-#include "guiutil.h"
-#include "rpcconsole.h"
-#include "wallet.h"
-#include "init.h"
-#include "ui_interface.h"
-#include "miner.h"
-#include "blockbrowser.h"
+#include <transactiontablemodel.h>
+#include <addressbookpage.h>
+#include <sendcoinsdialog.h>
+#include <signverifymessagedialog.h>
+#include <optionsdialog.h>
+#include <aboutdialog.h>
+#include <clientmodel.h>
+#include <walletmodel.h>
+#include <editaddressdialog.h>
+#include <optionsmodel.h>
+#include <transactiondescdialog.h>
+#include <addresstablemodel.h>
+#include <transactionview.h>
+#include <overviewpage.h>
+#include <honeyunits.h>
+#include <guiconstants.h>
+#include <askpassphrasedialog.h>
+#include <notificator.h>
+#include <guiutil.h>
+#include <rpcconsole.h>
+#include <wallet.h>
+#include <init.h>
+#include <ui_interface.h>
+#include <miner.h>
+#include <blockbrowser.h>
 
 #ifdef Q_OS_MAC
-#include "macdockiconhandler.h"
+#include <macdockiconhandler.h>
 #endif
 
 #include <QMenuBar>

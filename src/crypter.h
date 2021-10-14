@@ -4,10 +4,10 @@
 #ifndef __CRYPTER_H__
 #define __CRYPTER_H__
 
-#include "allocators.h" /* for SecureString */
-#include "key.h"
-#include "serialize.h"
-#include "keystore.h"
+#include <allocators.h> /* for SecureString */
+#include <key.h>
+#include <serialize.h>
+#include <keystore.h>
 
 #include <boost/signals2/signal.hpp>
 

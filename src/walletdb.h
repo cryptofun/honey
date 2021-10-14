@@ -5,8 +5,8 @@
 #ifndef HONEY_WALLETDB_H
 #define HONEY_WALLETDB_H
 
-#include "db.h"
-#include "key.h"
+#include <db.h>
+#include <key.h>
 
 #include <list>
 #include <string>

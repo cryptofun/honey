@@ -5,8 +5,8 @@
 #ifndef HONEY_KEYSTORE_H
 #define HONEY_KEYSTORE_H
 
-#include "key.h"
-#include "sync.h"
+#include <key.h>
+#include <sync.h>
 #include <boost/signals2/signal.hpp>
 
 class CScript;

@@ -20,8 +20,8 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/variant/get.hpp>
 
-#include "allocators.h"
-#include "version.h"
+#include <allocators.h>
+#include <version.h>
 
 class CAutoFile;
 class CDataStream;

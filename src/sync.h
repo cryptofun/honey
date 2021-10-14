@@ -6,7 +6,7 @@
 #ifndef HONEY_SYNC_H
 #define HONEY_SYNC_H
 
-#include "threadsafety.h"
+#include <threadsafety.h>
 
 #include <boost/thread/condition_variable.hpp>
 #include <boost/thread/locks.hpp>
@@ -21,9 +21,9 @@
 ////////////////////////////////////////////////
 
 /*
- 
- 
- 
+
+
+
 CCriticalSection mutex;
     boost::recursive_mutex mutex;
 
@@ -42,9 +42,9 @@ ENTER_CRITICAL_SECTION(mutex); // no RAII
 
 LEAVE_CRITICAL_SECTION(mutex); // no RAII
     mutex.unlock();
- 
- 
- 
+
+
+
  */
 
 
@@ -258,4 +258,3 @@ public:
     }
 };
 #endif
-

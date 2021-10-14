@@ -1,14 +1,14 @@
-#include "overviewpage.h"
-#include "ui_overviewpage.h"
+#include <overviewpage.h>
+#include <ui_overviewpage.h>
 
-#include "clientmodel.h"
-#include "walletmodel.h"
-#include "honeyunits.h"
-#include "optionsmodel.h"
-#include "transactiontablemodel.h"
-#include "transactionfilterproxy.h"
-#include "guiutil.h"
-#include "guiconstants.h"
+#include <clientmodel.h>
+#include <walletmodel.h>
+#include <honeyunits.h>
+#include <optionsmodel.h>
+#include <transactiontablemodel.h>
+#include <transactionfilterproxy.h>
+#include <guiutil.h>
+#include <guiconstants.h>
 
 #include <QAbstractItemDelegate>
 #include <QPainter>
@@ -88,7 +88,7 @@ public:
     int unit;
 
 };
-#include "overviewpage.moc"
+#include <overviewpage.moc>
 
 OverviewPage::OverviewPage(QWidget *parent) :
     QWidget(parent),

@@ -1,8 +1,8 @@
-#include "honeyamountfield.h"
+#include <honeyamountfield.h>
 
-#include "qvaluecombobox.h"
-#include "honeyunits.h"
-#include "guiconstants.h"
+#include <qvaluecombobox.h>
+#include <honeyunits.h>
+#include <guiconstants.h>
 
 #include <QHBoxLayout>
 #include <QKeyEvent>

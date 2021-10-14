@@ -5,10 +5,10 @@
 #ifndef HONEY_CORE_H
 #define HONEY_CORE_H
 
-#include "uint256.h"
-#include "serialize.h"
-#include "util.h"
-#include "script.h"
+#include <uint256.h>
+#include <serialize.h>
+#include <util.h>
+#include <script.h>
 
 #include <stdio.h>
 

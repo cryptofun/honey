@@ -7,7 +7,7 @@
 #include <openssl/rand.h>
 #include <openssl/obj_mac.h>
 
-#include "key.h"
+#include <key.h>
 
 
 // anonymous namespace with local implementation code (OpenSSL interaction)

@@ -1,13 +1,13 @@
-#include "walletmodel.h"
-#include "guiconstants.h"
-#include "optionsmodel.h"
-#include "addresstablemodel.h"
-#include "transactiontablemodel.h"
+#include <walletmodel.h>
+#include <guiconstants.h>
+#include <optionsmodel.h>
+#include <addresstablemodel.h>
+#include <transactiontablemodel.h>
 
-#include "ui_interface.h"
-#include "wallet.h"
-#include "walletdb.h" // for BackupWallet
-#include "base58.h"
+#include <ui_interface.h>
+#include <wallet.h>
+#include <walletdb.h> // for BackupWallet
+#include <base58.h>
 
 #include <QSet>
 #include <QTimer>

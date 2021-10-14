@@ -14,8 +14,8 @@
 #include <boost/foreach.hpp>
 #include <boost/variant.hpp>
 
-#include "keystore.h"
-#include "util.h"
+#include <keystore.h>
+#include <util.h>
 
 typedef std::vector<unsigned char> valtype;
 

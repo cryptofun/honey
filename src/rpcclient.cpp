@@ -4,12 +4,12 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <set>
-#include "rpcclient.h"
+#include <rpcclient.h>
 
-#include "rpcprotocol.h"
-#include "util.h"
-#include "ui_interface.h"
-#include "chainparams.h" // for Params().RPCPort()
+#include <rpcprotocol.h>
+#include <util.h>
+#include <ui_interface.h>
+#include <chainparams.h> // for Params().RPCPort()
 
 #include <stdint.h>
 
@@ -21,7 +21,7 @@
 #include <boost/iostreams/concepts.hpp>
 #include <boost/iostreams/stream.hpp>
 
-#include "json/json_spirit_writer_template.h"
+#include <json/json_spirit_writer_template.h>
 
 
 json_spirit::Object CallRPC(const std::string& strMethod, const json_spirit::Array& params)

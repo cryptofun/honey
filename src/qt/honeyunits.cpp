@@ -1,4 +1,4 @@
-#include "honeyunits.h"
+#include <honeyunits.h>
 
 #include <QStringList>
 

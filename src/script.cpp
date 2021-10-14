@@ -8,12 +8,12 @@
 #include <boost/tuple/tuple_comparison.hpp>
 #include <boost/variant.hpp>
 
-#include "script.h"
-#include "keystore.h"
-#include "key.h"
-#include "main.h"
-#include "sync.h"
-#include "util.h"
+#include <script.h>
+#include <keystore.h>
+#include <key.h>
+#include <main.h>
+#include <sync.h>
+#include <util.h>
 
 bool CheckSig(std::vector<unsigned char> vchSig, const std::vector<unsigned char> &vchPubKey, const CScript &scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType, int flags);
 

@@ -6,8 +6,8 @@
 #ifndef _HONEYRPC_SERVER_H_
 #define _HONEYRPC_SERVER_H_ 1
 
-#include "uint256.h"
-#include "rpcprotocol.h"
+#include <uint256.h>
+#include <rpcprotocol.h>
 
 #include <list>
 #include <map>

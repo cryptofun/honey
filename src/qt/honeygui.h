@@ -5,7 +5,7 @@
 #include <QSystemTrayIcon>
 
 #include <stdint.h>
-#include "blockbrowser.h"
+#include <blockbrowser.h>
 
 class TransactionTableModel;
 class ClientModel;

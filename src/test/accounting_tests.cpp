@@ -2,9 +2,9 @@
 
 #include <boost/foreach.hpp>
 
-#include "init.h"
-#include "wallet.h"
-#include "walletdb.h"
+#include <init.h>
+#include <wallet.h>
+#include <walletdb.h>
 
 BOOST_AUTO_TEST_SUITE(accounting_tests)
 

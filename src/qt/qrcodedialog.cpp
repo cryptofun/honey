@@ -1,10 +1,10 @@
-#include "qrcodedialog.h"
-#include "ui_qrcodedialog.h"
+#include <qrcodedialog.h>
+#include <ui_qrcodedialog.h>
 
-#include "honeyunits.h"
-#include "guiconstants.h"
-#include "guiutil.h"
-#include "optionsmodel.h"
+#include <honeyunits.h>
+#include <guiconstants.h>
+#include <guiutil.h>
+#include <optionsmodel.h>
 
 #include <QPixmap>
 #include <QUrl>

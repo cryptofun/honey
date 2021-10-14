@@ -1,4 +1,4 @@
-#include "honeyaddressvalidator.h"
+#include <honeyaddressvalidator.h>
 
 /* Base58 characters are:
      "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"

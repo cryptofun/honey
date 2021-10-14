@@ -8,16 +8,16 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/bind/bind.hpp>
 
-#include "arith_uint256.h"
-#include "chainparams.h"
-#include "checkpoints.h"
-#include "db.h"
-#include "init.h"
-#include "kernel.h"
-#include "net.h"
-#include "txdb.h"
-#include "txmempool.h"
-#include "ui_interface.h"
+#include <arith_uint256.h>
+#include <chainparams.h>
+#include <checkpoints.h>
+#include <db.h>
+#include <init.h>
+#include <kernel.h>
+#include <net.h>
+#include <txdb.h>
+#include <txmempool.h>
+#include <ui_interface.h>
 
 
 #if defined(NDEBUG)

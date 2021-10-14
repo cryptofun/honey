@@ -1,4 +1,4 @@
-#include "macdockiconhandler.h"
+#include <macdockiconhandler.h>
 
 #include <QImageWriter>
 #include <QMenu>

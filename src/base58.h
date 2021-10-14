@@ -18,11 +18,11 @@
 #include <string>
 #include <vector>
 
-#include "chainparams.h"
-#include "key.h"
-#include "script.h"
-#include "allocators.h"
-#include "util.h"
+#include <chainparams.h>
+#include <key.h>
+#include <script.h>
+#include <allocators.h>
+#include <util.h>
 
 #include <boost/variant.hpp>
 

@@ -3,17 +3,17 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "base58.h"
-#include "init.h"
-#include "main.h"
-#include "net.h"
-#include "netbase.h"
-#include "rpcserver.h"
-#include "timedata.h"
-#include "util.h"
+#include <base58.h>
+#include <init.h>
+#include <main.h>
+#include <net.h>
+#include <netbase.h>
+#include <rpcserver.h>
+#include <timedata.h>
+#include <util.h>
 #ifdef ENABLE_WALLET
-#include "wallet.h"
-#include "walletdb.h"
+#include <wallet.h>
+#include <walletdb.h>
 #endif
 
 #include <stdint.h>
@@ -21,8 +21,8 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/variant.hpp>
 
-#include "json/json_spirit_utils.h"
-#include "json/json_spirit_value.h"
+#include <json/json_spirit_utils.h>
+#include <json/json_spirit_value.h>
 
 
 json_spirit::Value getinfo(const json_spirit::Array& params, bool fHelp)

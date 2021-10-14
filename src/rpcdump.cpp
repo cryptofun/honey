@@ -5,10 +5,10 @@
 #include <iostream>
 #include <fstream>
 
-#include "init.h" // for pwalletMain
-#include "rpcserver.h"
-#include "ui_interface.h"
-#include "base58.h"
+#include <init.h> // for pwalletMain
+#include <rpcserver.h>
+#include <ui_interface.h>
+#include <base58.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/variant/get.hpp>

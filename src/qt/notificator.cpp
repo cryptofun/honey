@@ -1,4 +1,4 @@
-#include "notificator.h"
+#include <notificator.h>
 
 #include <QMetaType>
 #include <QVariant>

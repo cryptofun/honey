@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "key.h"
-#include "base58.h"
-#include "uint256.h"
-#include "util.h"
+#include <key.h>
+#include <base58.h>
+#include <uint256.h>
+#include <util.h>
 
 
 static const std::string strSecret1     ("5HxWvvfubhXpYYpS3tJkw6fq9jE9j18THftkZjHHfmFiWtmAbrj");

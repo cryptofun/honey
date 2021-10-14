@@ -1,4 +1,4 @@
-#include "qvaluecombobox.h"
+#include <qvaluecombobox.h>
 
 #include <QStyledItemDelegate>
 

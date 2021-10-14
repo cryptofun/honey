@@ -4,11 +4,11 @@
 
 #include <QApplication>
 
-#include "paymentserver.h"
+#include <paymentserver.h>
 
-#include "guiconstants.h"
-#include "ui_interface.h"
-#include "util.h"
+#include <guiconstants.h>
+#include <ui_interface.h>
+#include <util.h>
 
 #include <QByteArray>
 #include <QDataStream>

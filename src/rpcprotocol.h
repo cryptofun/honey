@@ -6,7 +6,7 @@
 #ifndef _HONEYRPC_PROTOCOL_H_
 #define _HONEYRPC_PROTOCOL_H_ 1
 
-#include "compat.h"
+#include <compat.h>
 
 #include <list>
 #include <map>
@@ -18,9 +18,9 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/filesystem.hpp>
 
-#include "json/json_spirit_reader_template.h"
-#include "json/json_spirit_utils.h"
-#include "json/json_spirit_writer_template.h"
+#include <json/json_spirit_reader_template.h>
+#include <json/json_spirit_utils.h>
+#include <json/json_spirit_writer_template.h>
 
 #if BOOST_VERSION >= 107000
 #define GET_IO_SERVICE(s) ((boost::asio::io_context&)(s).get_executor().context())

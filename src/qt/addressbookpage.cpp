@@ -1,15 +1,15 @@
-#include "addressbookpage.h"
-#include "ui_addressbookpage.h"
+#include <addressbookpage.h>
+#include <ui_addressbookpage.h>
 
-#include "addresstablemodel.h"
-#include "optionsmodel.h"
-#include "honeygui.h"
-#include "editaddressdialog.h"
-#include "csvmodelwriter.h"
-#include "guiutil.h"
+#include <addresstablemodel.h>
+#include <optionsmodel.h>
+#include <honeygui.h>
+#include <editaddressdialog.h>
+#include <csvmodelwriter.h>
+#include <guiutil.h>
 
 #ifdef USE_QRCODE
-#include "qrcodedialog.h"
+#include <qrcodedialog.h>
 #endif
 
 #include <QSortFilterProxyModel>

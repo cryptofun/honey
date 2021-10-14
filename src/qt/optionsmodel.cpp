@@ -1,10 +1,10 @@
-#include "optionsmodel.h"
+#include <optionsmodel.h>
 
-#include "honeyunits.h"
-#include "init.h"
-#include "wallet.h"
-#include "walletdb.h"
-#include "guiutil.h"
+#include <honeyunits.h>
+#include <init.h>
+#include <wallet.h>
+#include <walletdb.h>
+#include <guiutil.h>
 
 #include <QSettings>
 

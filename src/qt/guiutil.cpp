@@ -1,13 +1,13 @@
 #include <QApplication>
 
-#include "guiutil.h"
+#include <guiutil.h>
 
-#include "honeyaddressvalidator.h"
-#include "walletmodel.h"
-#include "honeyunits.h"
+#include <honeyaddressvalidator.h>
+#include <walletmodel.h>
+#include <honeyunits.h>
 
-#include "util.h"
-#include "init.h"
+#include <util.h>
+#include <init.h>
 
 #include <QDateTime>
 #include <QDoubleValidator>
@@ -37,9 +37,9 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include "shlwapi.h"
-#include "shlobj.h"
-#include "shellapi.h"
+#include <shlwapi.h>
+#include <shlobj.h>
+#include <shellapi.h>
 #endif
 
 namespace GUIUtil {

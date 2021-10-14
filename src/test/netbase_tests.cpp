@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "netbase.h"
+#include <netbase.h>
 
 
 BOOST_AUTO_TEST_SUITE(netbase_tests)
