@@ -23,7 +23,6 @@
 #include <boost/bind/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/foreach.hpp>
 #include <boost/iostreams/concepts.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/shared_ptr.hpp>
@@ -49,7 +48,7 @@ void RPCTypeCheck(const json_spirit::Array& params,
                   bool fAllowNull)
 {
     unsigned int i = 0;
-    BOOST_FOREACH(json_spirit::Value_type t, typesExpected)
+    for (json_spirit::Value_type t : typesExpected)
     {
         if (params.size() <= i)
             break;
@@ -69,7 +68,7 @@ void RPCTypeCheck(const json_spirit::Object& o,
                   const std::map<std::string, json_spirit::Value_type>& typesExpected,
                   bool fAllowNull)
 {
-    BOOST_FOREACH(const PAIRTYPE(std::string, json_spirit::Value_type)& t, typesExpected)
+    for (const std::pair<std::string, json_spirit::Value_type>& t : typesExpected)
     {
         const json_spirit::Value& v = json_spirit::find_value(o, t.first);
         if (!fAllowNull && v.type() == json_spirit::null_type)
@@ -359,7 +358,7 @@ bool ClientAllowed(const boost::asio::ip::address& address)
 
     const std::string strAddress = address.to_string();
     const std::vector<std::string>& vAllow = mapMultiArgs["-rpcallowip"];
-    BOOST_FOREACH(std::string strAllow, vAllow)
+    for (std::string strAllow : vAllow)
         if (WildcardMatch(strAddress, strAllow))
             return true;
     return false;

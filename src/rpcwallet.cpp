@@ -62,7 +62,7 @@ void WalletTxToJSON(const CWalletTx& wtx, json_spirit::Object& entry)
     entry.push_back(json_spirit::Pair("txid", wtx.GetHash().GetHex()));
     entry.push_back(json_spirit::Pair("time", (int64_t)wtx.GetTxTime()));
     entry.push_back(json_spirit::Pair("timereceived", (int64_t)wtx.nTimeReceived));
-    BOOST_FOREACH(const PAIRTYPE(std::string,std::string)& item, wtx.mapValue)
+    for (const std::pair<std::string,std::string>& item : wtx.mapValue)
         entry.push_back(json_spirit::Pair(item.first, item.second));
 }
 
@@ -150,7 +150,7 @@ CHoneyAddress GetAccountAddress(std::string strAccount, bool bForceNew=false)
              ++it)
         {
             const CWalletTx& wtx = (*it).second;
-            BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+            for (const CTxOut& txout : wtx.vout)
                 if (txout.scriptPubKey == scriptPubKey)
                     bKeyUsed = true;
         }
@@ -248,7 +248,7 @@ json_spirit::Value getaddressesbyaccount(const json_spirit::Array& params, bool 
 
     // Find all addresses that have the given account
     json_spirit::Array ret;
-    BOOST_FOREACH(const PAIRTYPE(CHoneyAddress, std::string)& item, pwalletMain->mapAddressBook)
+    for (const std::pair<CHoneyAddress, std::string>& item : pwalletMain->mapAddressBook)
     {
         const CHoneyAddress& address = item.first;
         const std::string& strName = item.second;
@@ -301,10 +301,10 @@ json_spirit::Value listaddressgroupings(const json_spirit::Array& params, bool f
 
     json_spirit::Array jsonGroupings;
     std::map<CTxDestination, int64_t> balances = pwalletMain->GetAddressBalances();
-    BOOST_FOREACH(std::set<CTxDestination> grouping, pwalletMain->GetAddressGroupings())
+    for (std::set<CTxDestination> grouping : pwalletMain->GetAddressGroupings())
     {
         json_spirit::Array jsonGrouping;
-        BOOST_FOREACH(CTxDestination address, grouping)
+        for (CTxDestination address : grouping)
         {
             json_spirit::Array addressInfo;
             addressInfo.push_back(CHoneyAddress(address).ToString());
@@ -385,7 +385,7 @@ json_spirit::Value getreceivedbyaddress(const json_spirit::Array& params, bool f
         if (wtx.IsCoinBase() || wtx.IsCoinStake() || !IsFinalTx(wtx))
             continue;
 
-        BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+        for (const CTxOut& txout : wtx.vout)
             if (txout.scriptPubKey == scriptPubKey)
                 if (wtx.GetDepthInMainChain() >= nMinDepth)
                     nAmount += txout.nValue;
@@ -397,7 +397,7 @@ json_spirit::Value getreceivedbyaddress(const json_spirit::Array& params, bool f
 
 void GetAccountAddresses(std::string strAccount, std::set<CTxDestination>& setAddress)
 {
-    BOOST_FOREACH(const PAIRTYPE(CTxDestination, std::string)& item, pwalletMain->mapAddressBook)
+    for (const std::pair<CTxDestination, std::string>& item : pwalletMain->mapAddressBook)
     {
         const CTxDestination& address = item.first;
         const std::string& strName = item.second;
@@ -433,7 +433,7 @@ json_spirit::Value getreceivedbyaccount(const json_spirit::Array& params, bool f
         if (wtx.IsCoinBase() || wtx.IsCoinStake() || !IsFinalTx(wtx))
             continue;
 
-        BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+        for (const CTxOut& txout : wtx.vout)
         {
             CTxDestination address;
             if (ExtractDestination(txout.scriptPubKey, address) && IsMine(*pwalletMain, address) && setAddress.count(address))
@@ -511,10 +511,10 @@ json_spirit::Value getbalance(const json_spirit::Array& params, bool fHelp)
             wtx.GetAmounts(listReceived, listSent, allFee, strSentAccount);
             if (wtx.GetDepthInMainChain() >= nMinDepth && wtx.GetBlocksToMaturity() == 0)
             {
-                BOOST_FOREACH(const PAIRTYPE(CTxDestination,int64_t)& r, listReceived)
+                for (const std::pair<CTxDestination,int64_t>& r : listReceived)
                     nBalance += r.second;
             }
-            BOOST_FOREACH(const PAIRTYPE(CTxDestination,int64_t)& r, listSent)
+            for (const std::pair<CTxDestination,int64_t>& r : listSent)
                 nBalance -= r.second;
             nBalance -= allFee;
         }
@@ -648,7 +648,7 @@ json_spirit::Value sendmany(const json_spirit::Array& params, bool fHelp)
     std::vector<std::pair<CScript, int64_t> > vecSend;
 
     int64_t totalAmount = 0;
-    BOOST_FOREACH(const json_spirit::Pair& s, sendTo)
+    for (const json_spirit::Pair& s : sendTo)
     {
         CHoneyAddress address(s.name_);
         if (!address.IsValid())
@@ -823,7 +823,7 @@ json_spirit::Value ListReceived(const json_spirit::Array& params, bool fByAccoun
         if (nDepth < nMinDepth)
             continue;
 
-        BOOST_FOREACH(const CTxOut& txout, wtx.vout)
+        for (const CTxOut& txout : wtx.vout)
         {
             CTxDestination address;
             if (!ExtractDestination(txout.scriptPubKey, address) || !IsMine(*pwalletMain, address))
@@ -838,7 +838,7 @@ json_spirit::Value ListReceived(const json_spirit::Array& params, bool fByAccoun
     // Reply
     json_spirit::Array ret;
     std::map<std::string, tallyitem> mapAccountTally;
-    BOOST_FOREACH(const PAIRTYPE(CHoneyAddress, std::string)& item, pwalletMain->mapAddressBook)
+    for (const std::pair<CHoneyAddress, std::string>& item : pwalletMain->mapAddressBook)
     {
         const CHoneyAddress& address = item.first;
         const std::string& strAccount = item.second;
@@ -942,7 +942,7 @@ void ListTransactions(const CWalletTx& wtx, const std::string& strAccount, int n
     // Sent
     if ((!wtx.IsCoinStake()) && (!listSent.empty() || nFee != 0) && (fAllAccounts || strAccount == strSentAccount))
     {
-        BOOST_FOREACH(const PAIRTYPE(CTxDestination, int64_t)& s, listSent)
+        for (const std::pair<CTxDestination, int64_t>& s : listSent)
         {
             json_spirit::Object entry;
             entry.push_back(json_spirit::Pair("account", strSentAccount));
@@ -960,7 +960,7 @@ void ListTransactions(const CWalletTx& wtx, const std::string& strAccount, int n
     if (listReceived.size() > 0 && wtx.GetDepthInMainChain() >= nMinDepth)
     {
         bool stop = false;
-        BOOST_FOREACH(const PAIRTYPE(CTxDestination, int64_t)& r, listReceived)
+        for (const std::pair<CTxDestination, int64_t>& r : listReceived)
         {
             std::string account;
             if (pwalletMain->mapAddressBook.count(r.first))
@@ -1089,7 +1089,7 @@ json_spirit::Value listaccounts(const json_spirit::Array& params, bool fHelp)
         nMinDepth = params[0].get_int();
 
     std::map<std::string, int64_t> mapAccountBalances;
-    BOOST_FOREACH(const PAIRTYPE(CTxDestination, std::string)& entry, pwalletMain->mapAddressBook) {
+    for (const std::pair<CTxDestination, std::string>& entry : pwalletMain->mapAddressBook) {
         if (IsMine(*pwalletMain, entry.first)) // This address belongs to me
             mapAccountBalances[entry.second] = 0;
     }
@@ -1106,11 +1106,11 @@ json_spirit::Value listaccounts(const json_spirit::Array& params, bool fHelp)
             continue;
         wtx.GetAmounts(listReceived, listSent, nFee, strSentAccount);
         mapAccountBalances[strSentAccount] -= nFee;
-        BOOST_FOREACH(const PAIRTYPE(CTxDestination, int64_t)& s, listSent)
+        for (const std::pair<CTxDestination, int64_t>& s : listSent)
             mapAccountBalances[strSentAccount] -= s.second;
         if (nDepth >= nMinDepth && wtx.GetBlocksToMaturity() == 0)
         {
-            BOOST_FOREACH(const PAIRTYPE(CTxDestination, int64_t)& r, listReceived)
+            for (const std::pair<CTxDestination, int64_t>& r : listReceived)
                 if (pwalletMain->mapAddressBook.count(r.first))
                     mapAccountBalances[pwalletMain->mapAddressBook[r.first]] += r.second;
                 else
@@ -1120,11 +1120,11 @@ json_spirit::Value listaccounts(const json_spirit::Array& params, bool fHelp)
 
     std::list<CAccountingEntry> acentries;
     CWalletDB(pwalletMain->strWalletFile).ListAccountCreditDebit("*", acentries);
-    BOOST_FOREACH(const CAccountingEntry& entry, acentries)
+    for (const CAccountingEntry& entry : acentries)
         mapAccountBalances[entry.strAccount] += entry.nCreditDebit;
 
     json_spirit::Object ret;
-    BOOST_FOREACH(const PAIRTYPE(std::string, int64_t)& accountBalance, mapAccountBalances) {
+    for (const std::pair<std::string, int64_t>& accountBalance : mapAccountBalances) {
         ret.push_back(json_spirit::Pair(accountBalance.first, ValueFromAmount(accountBalance.second)));
     }
     return ret;

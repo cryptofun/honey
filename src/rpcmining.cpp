@@ -169,7 +169,7 @@ json_spirit::Value checkkernel(const json_spirit::Array& params, bool fHelp)
     int64_t nTime = GetAdjustedTime();
     nTime &= ~STAKE_TIMESTAMP_MASK;
 
-    BOOST_FOREACH(json_spirit::Value& input, inputs)
+    for (json_spirit::Value& input : inputs)
     {
         const json_spirit::Object& o = input.get_obj();
 
@@ -265,7 +265,7 @@ json_spirit::Value getworkex(const json_spirit::Array& params, bool fHelp)
             {
                 // Deallocate old blocks since they're obsolete now
                 mapNewBlock.clear();
-                BOOST_FOREACH(CBlock* pblock, vNewBlock)
+                for (CBlock* pblock : vNewBlock)
                     delete pblock;
                 vNewBlock.clear();
             }
@@ -312,7 +312,7 @@ json_spirit::Value getworkex(const json_spirit::Array& params, bool fHelp)
 
         json_spirit::Array merkle_arr;
 
-        BOOST_FOREACH(uint256 merkleh, merkle) {
+        for (uint256 merkleh : merkle) {
             merkle_arr.push_back(HexStr(BEGIN(merkleh), END(merkleh)));
         }
 
@@ -399,7 +399,7 @@ json_spirit::Value getwork(const json_spirit::Array& params, bool fHelp)
             {
                 // Deallocate old blocks since they're obsolete now
                 mapNewBlock.clear();
-                BOOST_FOREACH(CBlock* pblock, vNewBlock)
+                for (CBlock* pblock : vNewBlock)
                     delete pblock;
                 vNewBlock.clear();
             }
@@ -563,7 +563,7 @@ json_spirit::Value getblocktemplate(const json_spirit::Array& params, bool fHelp
     std::map<uint256, int64_t> setTxIndex;
     int i = 0;
     CTxDB txdb("r");
-    BOOST_FOREACH (CTransaction& tx, pblock->vtx)
+    for (CTransaction& tx : pblock->vtx)
     {
         uint256 txHash = tx.GetHash();
         setTxIndex[txHash] = i++;
@@ -587,7 +587,7 @@ json_spirit::Value getblocktemplate(const json_spirit::Array& params, bool fHelp
             entry.push_back(json_spirit::Pair("fee", (int64_t)(tx.GetValueIn(mapInputs) - tx.GetValueOut())));
 
             json_spirit::Array deps;
-            BOOST_FOREACH (MapPrevTx::value_type& inp, mapInputs)
+            for (MapPrevTx::value_type& inp : mapInputs)
             {
                 if (setTxIndex.count(inp.first))
                     deps.push_back(setTxIndex[inp.first]);

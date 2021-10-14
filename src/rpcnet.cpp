@@ -12,7 +12,6 @@
 #include <timedata.h>
 #include <util.h>
 
-#include <boost/foreach.hpp>
 #include <json/json_spirit_value.h>
 
 
@@ -38,7 +37,7 @@ json_spirit::Value ping(const json_spirit::Array& params, bool fHelp)
 
     // Request that each node send a ping during next message processing pass
     LOCK(cs_vNodes);
-    BOOST_FOREACH(CNode* pNode, vNodes) {
+    for (CNode* pNode : vNodes) {
         pNode->fPingQueued = true;
     }
 
@@ -51,7 +50,7 @@ static void CopyNodeStats(std::vector<CNodeStats>& vstats)
 
     LOCK(cs_vNodes);
     vstats.reserve(vNodes.size());
-    BOOST_FOREACH(CNode* pnode, vNodes) {
+    for (CNode* pnode : vNodes) {
         CNodeStats stats;
         pnode->copyStats(stats);
         vstats.push_back(stats);
@@ -70,7 +69,7 @@ json_spirit::Value getpeerinfo(const json_spirit::Array& params, bool fHelp)
 
     json_spirit::Array ret;
 
-    BOOST_FOREACH(const CNodeStats& stats, vstats) {
+    for (const CNodeStats& stats : vstats) {
         json_spirit::Object obj;
 
         obj.push_back(json_spirit::Pair("addr", stats.addrName));
@@ -157,14 +156,14 @@ json_spirit::Value getaddednodeinfo(const json_spirit::Array& params, bool fHelp
     if (params.size() == 1)
     {
         LOCK(cs_vAddedNodes);
-        BOOST_FOREACH(std::string& strAddNode, vAddedNodes)
+        for (std::string& strAddNode : vAddedNodes)
             laddedNodes.push_back(strAddNode);
     }
     else
     {
         std::string strNode = params[1].get_str();
         LOCK(cs_vAddedNodes);
-        BOOST_FOREACH(std::string& strAddNode, vAddedNodes)
+        for (std::string& strAddNode : vAddedNodes)
             if (strAddNode == strNode)
             {
                 laddedNodes.push_back(strAddNode);
@@ -177,7 +176,7 @@ json_spirit::Value getaddednodeinfo(const json_spirit::Array& params, bool fHelp
     if (!fDns)
     {
         json_spirit::Object ret;
-        BOOST_FOREACH(std::string& strAddNode, laddedNodes)
+        for (std::string& strAddNode : laddedNodes)
             ret.push_back(json_spirit::Pair("addednode", strAddNode));
         return ret;
     }
@@ -185,7 +184,7 @@ json_spirit::Value getaddednodeinfo(const json_spirit::Array& params, bool fHelp
     json_spirit::Array ret;
 
     std::list<std::pair<std::string, std::vector<CService> > > laddedAddreses(0);
-    BOOST_FOREACH(std::string& strAddNode, laddedNodes)
+    for (std::string& strAddNode : laddedNodes)
     {
         std::vector<CService> vservNode(0);
         if(Lookup(strAddNode.c_str(), vservNode, Params().GetDefaultPort(), fNameLookup, 0))
@@ -208,12 +207,12 @@ json_spirit::Value getaddednodeinfo(const json_spirit::Array& params, bool fHelp
 
         json_spirit::Array addresses;
         bool fConnected = false;
-        BOOST_FOREACH(CService& addrNode, it->second)
+        for (CService& addrNode : it->second)
         {
             bool fFound = false;
             json_spirit::Object node;
             node.push_back(json_spirit::Pair("address", addrNode.ToString()));
-            BOOST_FOREACH(CNode* pnode, vNodes)
+            for (CNode* pnode : vNodes)
                 if (pnode->addr == addrNode)
                 {
                     fFound = true;

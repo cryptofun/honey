@@ -99,7 +99,7 @@ public:
         obj.push_back(json_spirit::Pair("script", GetTxnOutputType(whichType)));
         obj.push_back(json_spirit::Pair("hex", HexStr(subscript.begin(), subscript.end())));
         json_spirit::Array a;
-        BOOST_FOREACH(const CTxDestination& addr, addresses)
+        for (const CTxDestination& addr : addresses)
             a.push_back(CHoneyAddress(addr).ToString());
         obj.push_back(json_spirit::Pair("addresses", a));
         if (whichType == TX_MULTISIG)

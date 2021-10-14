@@ -9,7 +9,7 @@ CONFIG += no_include_pwd
 CONFIG += thread
 CONFIG += static
 
-QMAKE_CXXFLAGS += -Wno-deprecated-copy
+QMAKE_CXXFLAGS += -Wno-deprecated-copy -std=gnu++17
 
 win32{
 BOOST_LIB_SUFFIX=-mgw63-mt-s-1_63
@@ -179,6 +179,7 @@ HEADERS += src/qt/honeygui.h \
     src/hash.h \
     src/uint256.h \
     src/kernel.h \
+    src/reverse_iterator.h \
     src/crypto/scrypt/scrypt.h \
     src/crypto/scrypt/pbkdf2.h \
     src/serialize.h \

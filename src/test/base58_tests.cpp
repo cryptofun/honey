@@ -17,7 +17,7 @@ BOOST_AUTO_TEST_CASE(base58_EncodeBase58)
 {
     json_spirit::Array tests = read_json("base58_encode_decode.json");
 
-    BOOST_FOREACH(json_spirit::Value& tv, tests)
+    for (json_spirit::Value& tv : tests)
     {
         json_spirit::Array test = tv.get_array();
         std::string strTest = json_spirit::write_string(tv, false);
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(base58_DecodeBase58)
     json_spirit::Array tests = read_json("base58_encode_decode.json");
     std::vector<unsigned char> result;
 
-    BOOST_FOREACH(json_spirit::Value& tv, tests)
+    for (json_spirit::Value& tv : tests)
     {
         json_spirit::Array test = tv.get_array();
         std::string strTest = json_spirit::write_string(tv, false);
@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_parse)
     CHoneySecret secret;
     CHoneyAddress addr;
 
-    BOOST_FOREACH(json_spirit::Value& tv, tests)
+    for (json_spirit::Value& tv : tests)
     {
         json_spirit::Array test = tv.get_array();
         std::string strTest = json_spirit::write_string(tv, false);
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(base58_keys_valid_gen)
 {
     json_spirit::Array tests = read_json("base58_keys_valid.json");
     std::vector<unsigned char> result;
-    BOOST_FOREACH(json_spirit::Value& tv, tests)
+    for (json_spirit::Value& tv : tests)
     {
         json_spirit::Array test = tv.get_array();
         std::string strTest = json_spirit::write_string(tv, false);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(base58_keys_invalid)
     CHoneySecret secret;
     CHoneyAddress addr;
 
-    BOOST_FOREACH(json_spirit::Value& tv, tests)
+    for (json_spirit::Value& tv : tests)
     {
         json_spirit::Array test = tv.get_array();
         std::string strTest = json_spirit::write_string(tv, false);

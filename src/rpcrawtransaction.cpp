@@ -37,7 +37,7 @@ void ScriptPubKeyToJSON(const CScript& scriptPubKey, json_spirit::Object& out, b
     out.push_back(json_spirit::Pair("type", GetTxnOutputType(type)));
 
     json_spirit::Array a;
-    BOOST_FOREACH(const CTxDestination& addr, addresses)
+    for (const CTxDestination& addr : addresses)
         a.push_back(CHoneyAddress(addr).ToString());
     out.push_back(json_spirit::Pair("addresses", a));
 }
@@ -49,7 +49,7 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, json_spirit::Obje
     entry.push_back(json_spirit::Pair("time", (int64_t)tx.nTime));
     entry.push_back(json_spirit::Pair("locktime", (int64_t)tx.nLockTime));
     json_spirit::Array vin;
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
+    for (const CTxIn& txin : tx.vin)
     {
         json_spirit::Object in;
         if (tx.IsCoinBase())
@@ -161,7 +161,7 @@ json_spirit::Value listunspent(const json_spirit::Array& params, bool fHelp)
     if (params.size() > 2)
     {
         json_spirit::Array inputs = params[2].get_array();
-        BOOST_FOREACH(json_spirit::Value& input, inputs)
+        for (json_spirit::Value& input : inputs)
         {
             CHoneyAddress address(input.get_str());
             if (!address.IsValid())
@@ -176,7 +176,7 @@ json_spirit::Value listunspent(const json_spirit::Array& params, bool fHelp)
     std::vector<COutput> vecOutputs;
     assert(pwalletMain != NULL);
     pwalletMain->AvailableCoins(vecOutputs, false);
-    BOOST_FOREACH(const COutput& out, vecOutputs)
+    for (const COutput& out : vecOutputs)
     {
         if (out.nDepth < nMinDepth || out.nDepth > nMaxDepth)
             continue;
@@ -243,7 +243,7 @@ json_spirit::Value createrawtransaction(const json_spirit::Array& params, bool f
 
     CTransaction rawTx;
 
-    BOOST_FOREACH(json_spirit::Value& input, inputs)
+    for (json_spirit::Value& input : inputs)
     {
         const json_spirit::Object& o = input.get_obj();
 
@@ -266,7 +266,7 @@ json_spirit::Value createrawtransaction(const json_spirit::Array& params, bool f
     }
 
     std::set<CHoneyAddress> setAddress;
-    BOOST_FOREACH(const json_spirit::Pair& s, sendTo)
+    for (const json_spirit::Pair& s : sendTo)
     {
         CHoneyAddress address(s.name_);
         if (!address.IsValid())
@@ -397,7 +397,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
         tempTx.FetchInputs(txdb, unused, false, false, mapPrevTx, fInvalid);
 
         // Copy results into mapPrevOut:
-        BOOST_FOREACH(const CTxIn& txin, tempTx.vin)
+        for (const CTxIn& txin : tempTx.vin)
         {
             const uint256& prevHash = txin.prevout.hash;
             if (mapPrevTx.count(prevHash) && mapPrevTx[prevHash].second.vout.size()>txin.prevout.n)
@@ -411,7 +411,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
     {
         fGivenKeys = true;
         json_spirit::Array keys = params[2].get_array();
-        BOOST_FOREACH(json_spirit::Value k, keys)
+        for (json_spirit::Value k : keys)
         {
             CHoneySecret vchSecret;
             bool fGood = vchSecret.SetString(k.get_str());
@@ -430,7 +430,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
     if (params.size() > 1 && params[1].type() != json_spirit::null_type)
     {
         json_spirit::Array prevTxs = params[1].get_array();
-        BOOST_FOREACH(json_spirit::Value& p, prevTxs)
+        for (json_spirit::Value& p : prevTxs)
         {
             if (p.type() != json_spirit::obj_type)
                 throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "expected object with {\"txid'\",\"vout\",\"scriptPubKey\"}");
@@ -529,7 +529,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
             SignSignature(keystore, prevPubKey, mergedTx, i, nHashType);
 
         // ... and merge in other signatures:
-        BOOST_FOREACH(const CTransaction& txv, txVariants)
+        for (const CTransaction& txv : txVariants)
         {
             txin.scriptSig = CombineSignatures(prevPubKey, mergedTx, i, txin.scriptSig, txv.vin[i].scriptSig);
         }

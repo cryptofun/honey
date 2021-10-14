@@ -133,7 +133,7 @@ json_spirit::Object blockToJSON(const CBlock& block, const CBlockIndex* blockind
     result.push_back(json_spirit::Pair("modifier", strprintf("%016x", blockindex->nStakeModifier)));
     result.push_back(json_spirit::Pair("modifierv2", blockindex->bnStakeModifierV2.GetHex()));
     json_spirit::Array txinfo;
-    BOOST_FOREACH (const CTransaction& tx, block.vtx)
+    for (const CTransaction& tx : block.vtx)
     {
         if (fPrintTransactionDetail)
         {
@@ -202,7 +202,7 @@ json_spirit::Value getrawmempool(const json_spirit::Array& params, bool fHelp)
     mempool.queryHashes(vtxid);
 
     json_spirit::Array a;
-    BOOST_FOREACH(const uint256& hash, vtxid)
+    for (const uint256& hash : vtxid)
         a.push_back(hash.ToString());
 
     return a;
