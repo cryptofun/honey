@@ -3,7 +3,6 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include <boost/assign/list_of.hpp>
 
 #include <base58.h>
 #include <rpcserver.h>
@@ -148,7 +147,7 @@ json_spirit::Value listunspent(const json_spirit::Array& params, bool fHelp)
             "Results are an array of Objects, each of which has:\n"
             "{txid, vout, scriptPubKey, amount, confirmations}");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::int_type)(json_spirit::int_type)(json_spirit::array_type));
+    RPCTypeCheck(params, {json_spirit::int_type, json_spirit::int_type, json_spirit::array_type});
 
     int nMinDepth = 1;
     if (params.size() > 0)
@@ -237,7 +236,7 @@ json_spirit::Value createrawtransaction(const json_spirit::Array& params, bool f
             "Note that the transaction's inputs are not signed, and\n"
             "it is not stored in the wallet or transmitted to the network.");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::array_type)(json_spirit::obj_type));
+        RPCTypeCheck(params, {json_spirit::array_type, json_spirit::obj_type});
 
     json_spirit::Array inputs = params[0].get_array();
     json_spirit::Object sendTo = params[1].get_obj();
@@ -297,7 +296,7 @@ json_spirit::Value decoderawtransaction(const json_spirit::Array& params, bool f
             "decoderawtransaction <hex string>\n"
             "Return a JSON object representing the serialized, hex-encoded transaction.");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::str_type));
+    RPCTypeCheck(params, {json_spirit::str_type});
 
     std::vector<unsigned char> txData(ParseHex(params[0].get_str()));
     CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
@@ -322,7 +321,7 @@ json_spirit::Value decodescript(const json_spirit::Array& params, bool fHelp)
             "decodescript <hex string>\n"
             "Decode a hex-encoded script.");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::str_type));
+    RPCTypeCheck(params, {json_spirit::str_type});
 
     json_spirit::Object r;
     CScript script;
@@ -358,7 +357,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
 #endif
             );
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::str_type)(json_spirit::array_type)(json_spirit::array_type)(json_spirit::str_type), true);
+    RPCTypeCheck(params, {json_spirit::str_type, json_spirit::array_type, json_spirit::array_type, json_spirit::str_type}, true);
 
     std::vector<unsigned char> txData(ParseHex(params[0].get_str()));
     CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
@@ -438,7 +437,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
 
             json_spirit::Object prevOut = p.get_obj();
 
-            RPCTypeCheck(prevOut, boost::assign::map_list_of("txid", json_spirit::str_type)("vout", json_spirit::int_type)("scriptPubKey", json_spirit::str_type));
+            RPCTypeCheck(prevOut, {{"txid", json_spirit::str_type}, {"vout", json_spirit::int_type}, {"scriptPubKey", json_spirit::str_type}});
 
             std::string txidHex = json_spirit::find_value(prevOut, "txid").get_str();
             if (!IsHex(txidHex))
@@ -475,7 +474,7 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
             // given), add redeemScript to the tempKeystore so it can be signed:
             if (fGivenKeys && scriptPubKey.IsPayToScriptHash())
             {
-                RPCTypeCheck(prevOut, boost::assign::map_list_of("txid", json_spirit::str_type)("vout", json_spirit::int_type)("scriptPubKey", json_spirit::str_type)("redeemScript",json_spirit::str_type));
+                RPCTypeCheck(prevOut, {{"txid", json_spirit::str_type},{"vout", json_spirit::int_type},{"scriptPubKey", json_spirit::str_type},{"redeemScript",json_spirit::str_type}});
                 json_spirit::Value v = json_spirit::find_value(prevOut, "redeemScript");
                 if (!(v == json_spirit::Value::null))
                 {
@@ -496,15 +495,14 @@ json_spirit::Value signrawtransaction(const json_spirit::Array& params, bool fHe
     int nHashType = SIGHASH_ALL;
     if (params.size() > 3 && params[3].type() != json_spirit::null_type)
     {
-        static std::map<std::string, int> mapSigHashValues =
-            boost::assign::map_list_of
-            (std::string("ALL"), int(SIGHASH_ALL))
-            (std::string("ALL|ANYONECANPAY"), int(SIGHASH_ALL|SIGHASH_ANYONECANPAY))
-            (std::string("NONE"), int(SIGHASH_NONE))
-            (std::string("NONE|ANYONECANPAY"), int(SIGHASH_NONE|SIGHASH_ANYONECANPAY))
-            (std::string("SINGLE"), int(SIGHASH_SINGLE))
-            (std::string("SINGLE|ANYONECANPAY"), int(SIGHASH_SINGLE|SIGHASH_ANYONECANPAY))
-            ;
+        static std::map<std::string, int> mapSigHashValues = {
+            {std::string("ALL"), int(SIGHASH_ALL)},
+            {std::string("ALL|ANYONECANPAY"), int(SIGHASH_ALL|SIGHASH_ANYONECANPAY)},
+            {std::string("NONE"), int(SIGHASH_NONE)},
+            {std::string("NONE|ANYONECANPAY"), int(SIGHASH_NONE|SIGHASH_ANYONECANPAY)},
+            {std::string("SINGLE"), int(SIGHASH_SINGLE)},
+            {std::string("SINGLE|ANYONECANPAY"), int(SIGHASH_SINGLE|SIGHASH_ANYONECANPAY)},
+        };
         std::string strHashType = params[3].get_str();
         if (mapSigHashValues.count(strHashType))
             nHashType = mapSigHashValues[strHashType];
@@ -555,7 +553,7 @@ json_spirit::Value sendrawtransaction(const json_spirit::Array& params, bool fHe
             "sendrawtransaction <hex string>\n"
             "Submits raw transaction (serialized, hex-encoded) to local node and network.");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::str_type));
+    RPCTypeCheck(params, {json_spirit::str_type});
 
     // parse hex string from parameter
     std::vector<unsigned char> txData(ParseHex(params[0].get_str()));

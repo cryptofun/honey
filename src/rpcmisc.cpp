@@ -18,7 +18,6 @@
 
 #include <stdint.h>
 
-#include <boost/assign/list_of.hpp>
 #include <boost/variant.hpp>
 
 #include <json/json_spirit_utils.h>

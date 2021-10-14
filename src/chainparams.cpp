@@ -9,8 +9,6 @@
 #include <main.h>
 #include <util.h>
 
-#include <boost/assign/list_of.hpp>
-
 struct SeedSpec6 {
     uint8_t addr[16];
     uint16_t port;
@@ -89,8 +87,8 @@ public:
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,41);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,63);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,100);
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x50)(0xE7)(0xFC)(0x0A).convert_to_container<std::vector<unsigned char> >();
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x50)(0x9E)(0x4)(0x2F).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x50, 0xE7, 0xFC, 0x0A};
+        base58Prefixes[EXT_SECRET_KEY] = {0x50, 0x9E, 0x4, 0x2F};
 
         // Honey dns seeds
         vSeeds.push_back(CDNSSeedData("TheCryptoChat",  "honey.thecryptochat.net"));
@@ -156,8 +154,8 @@ public:
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,100);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,125);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,41);
-        base58Prefixes[EXT_PUBLIC_KEY] = boost::assign::list_of(0x1D)(0x9B)(0x7F)(0x74).convert_to_container<std::vector<unsigned char> >();
-        base58Prefixes[EXT_SECRET_KEY] = boost::assign::list_of(0x1D)(0xC0)(0xFC)(0x28).convert_to_container<std::vector<unsigned char> >();
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x1D, 0x9B, 0x7F, 0x74};
+        base58Prefixes[EXT_SECRET_KEY] = {0x1D, 0xC0, 0xFC, 0x28};
 
         // Honey dns seeds
         // vSeeds.push_back(CDNSSeedData("Seed01",  "0.0.0.0"));

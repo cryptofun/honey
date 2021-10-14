@@ -12,7 +12,6 @@
 #include <miner.h>
 #include <kernel.h>
 
-#include <boost/assign/list_of.hpp>
 
 
 // Key used by getwork/getblocktemplate miners.
@@ -53,7 +52,7 @@ json_spirit::Value getstakesubsidy(const json_spirit::Array& params, bool fHelp)
             "getstakesubsidy <hex string>\n"
             "Returns proof-of-stake subsidy value for the specified coinstake.");
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::str_type));
+    RPCTypeCheck(params, {json_spirit::str_type});
 
     std::vector<unsigned char> txData(ParseHex(params[0].get_str()));
     CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
@@ -153,7 +152,7 @@ json_spirit::Value checkkernel(const json_spirit::Array& params, bool fHelp)
             "Check if one of given inputs is a kernel input at the moment.\n"
         );
 
-    RPCTypeCheck(params, boost::assign::list_of(json_spirit::array_type)(json_spirit::bool_type));
+    RPCTypeCheck(params, {json_spirit::array_type, json_spirit::bool_type});
 
     json_spirit::Array inputs = params[0].get_array();
     bool fCreateBlockTemplate = params.size() > 1 ? params[1].get_bool() : false;
